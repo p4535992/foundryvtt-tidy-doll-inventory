@@ -1,0 +1,20 @@
+{
+  "name": "tidy-doll-inventory",
+  "version": "1.0.0",
+  "description": "<!-- SPDX-FileCopyrightText: 2020 Cody Swendrowski SPDX-FileCopyrightText: 2020 Andrew Krigline SPDX-FileCopyrightText: 2020 Fallayn SPDX-FileCopyrightText: 2021 BadIdeasBureau",
+  "scripts": {
+    "launch Foundry": "cd C:/Program Files/Foundry Virtual Tabletop_10/resources/app && node main.js",
+    "watch": "gulp watch"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "browser-sync": "^2.27.11",
+    "gulp": "^4.0.2",
+    "gulp-sass": "^5.1.0",
+    "sass": "^1.55.0"
+  },
+  "dependencies": {
+    "handlebars-helper-repeat": "^2.0.0"
+  }
+}

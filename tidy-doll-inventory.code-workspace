@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../tidy5e-sheet"
+		},
+		{
+			"path": "../../systems/dnd5e"
+		},
+		{
+			"path": "../../../../../../../../Program Files/Foundry Virtual Tabletop_10"
+		},
+		{
+			"path": "../../systems/noc"
+		}
+	],
+	"settings": {}
+}
