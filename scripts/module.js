@@ -5,6 +5,10 @@
 import DollInventorySheet from "./sheet/DollInventorySheet.mjs";
 
 Hooks.once('init', async function () {
+
+
+
+
     Actors.registerSheet("dnd5e", DollInventorySheet, {
         types: ["character"],
         makeDefault: true,

@@ -25,7 +25,7 @@
     "scripts/module.js"
   ],
   "styles": [
-    "styles/css/doll-inventory.css"
+    "css/doll-inventory.css"
   ],
   "languages": [
     {
