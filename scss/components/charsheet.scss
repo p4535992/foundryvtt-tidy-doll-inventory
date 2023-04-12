@@ -1,33 +1,238 @@
 div.doll-inventory-sheet.actor {
     .window-content {
         header.tidy5e-header {
-            box-shadow: 0px -20px 60px red inset;
-            background: radial-gradient(circle, rgba(112, 37, 37, 0.423) 0%, rgba(255, 0, 0, 0.513) 100%)
+            background: linear-gradient(to right, #cf0c0cac 0%, #cf0c0cac 30%, #cf9115a4 100%);
         }
 
         nav.tidy5e-navigation.tabs {
             justify-content: end;
+            position: absolute;
+            bottom: -2.5rem;
+            width: 100%;
 
-            a {
+
+            div.toggle-allow-edit {
+                background: none;
+                border: 1px solid transparent;
+
+                border-bottom: 1px solid var(--t5e-header-border);
+
+                span {
+                    position: relative;
+                    top: -0.5rem;
+                }
+            }
+
+            a.item,
+            a.item:first-child {
+                transition: 0.3s;
+                padding: 0px 10px;
                 position: relative;
-                max-width: min-content;
+                max-width: 2rem;
+                height: 2.5rem;
                 border: none;
-                border-radius: 50%;
                 background-color: red;
-                box-shadow: 0px 0px 15px rgb(114, 19, 19) inset;
-                top: -50%;
+                box-shadow: 0px 0px 15px black;
+                clip-path: polygon(0 0, 100% 0%, 100% 30%, 50% 70%, 0% 30%);
+
+                &[data-tab="attributes"] i {
+                    color: black
+                }
 
                 &.active {
-                    border: none;
-                    background-color: red;
-                    box-shadow: 0px 0px 15px rgb(255, 239, 239) inset;
+                    background-color: #cf9115;
+                    padding: 3px 8px;
+                    font-size: larger;
+                    clip-path: polygon(0 0, 100% 1%, 100% 74%, 50% 100%, 0 74%);
 
+                }
 
+                &:hover {
+                    color: black;
+                    clip-path: polygon(0 0, 100% 1%, 100% 74%, 50% 100%, 0 74%);
 
                 }
             }
         }
+
+        .sheet-body {
+            padding: 0;
+
+            .left-pane {
+                justify-content: center;
+                display: flex;
+                height: 100%;
+                padding: 0;
+                margin: 0;
+                background: linear-gradient(to bottom, #cf0c0cac 0%, #cf9115a4 100%);
+
+                .skills-list {
+                    border: none
+                }
+
+                ;
+
+                .traits {
+                    border: none
+                }
+
+                ul.resources {
+                    display: flex;
+                    flex-direction: row;
+                }
+            }
+
+        }
+
+        .center-pane {
+            .inventory-doll {
+                padding-top: 2rem;
+                min-height: 70%;
+                border: red;
+                display: grid;
+                grid-template-rows: repeat(8, 3rem);
+                grid-template-columns: repeat(6, 3rem);
+                grid-gap: 10px 30px;
+                background-size: cover;
+                background-position: center no-reapeat;
+
+
+                .doll-location {
+                    min-width: 2rem;
+                    min-height: 2rem;
+                    padding: 0.1rem;
+                    position: relative;
+                    border: 2px solid gray;
+                    font-size: x-small;
+                    border-radius: 10px;
+                    background-color: rgba(128, 128, 128, 0.413);
+
+
+
+
+                    &[data-location="coinPouch"] {
+                        grid-row: 8/9;
+                        grid-column: 6/7;
+                    }
+
+                    &[data-location="bag"] {
+                        grid-row: 8/9;
+                        grid-column: 5/6;
+                    }
+
+                    &[data-location="ready4"] {
+                        grid-row: 8/9;
+                        grid-column: 4/5;
+                    }
+
+                    &[data-location="ready3"] {
+                        grid-row: 8/9;
+                        grid-column: 3/4
+                    }
+
+                    &[data-location="ready2"] {
+                        grid-row: 8/9;
+                        grid-column: 2/3
+                    }
+
+                    &[data-location="ready1"] {
+                        grid-row: 8/9;
+                        grid-column: 1/2
+                    }
+
+                    &[data-location="head"] {
+                        grid-row: 1/2;
+                        grid-column: 1/2;
+                    }
+
+                    &[data-location="chest"] {
+                        grid-row: 2/3;
+                        grid-column: 1/2;
+                    }
+
+                    &[data-location="pants"] {
+                        grid-row: 3/4;
+                        grid-column: 1/2;
+                    }
+
+                    &[data-location="boots"] {
+                        grid-row: 4/5;
+                        grid-column: 1/2;
+                    }
+
+                    &[data-location="gloves"] {
+                        grid-row: 5/6;
+                        grid-column: 1/2;
+                    }
+
+                    &[data-location="cloak"] {
+                        grid-row: 6/7;
+                        grid-column: 1/2;
+                    }
+
+                    &[data-location="bauble1"] {
+                        grid-row: 1/2;
+                        grid-column: 6/7;
+                    }
+
+                    &[data-location="bauble2"] {
+                        grid-row: 2/3;
+                        grid-column: 6/7
+                    }
+
+                    &[data-location="bauble3"] {
+                        grid-row: 3/4;
+                        grid-column: 6/7
+                    }
+
+                    &[data-location="bauble4"] {
+                        grid-row: 4/5;
+                        grid-column: 6/7
+                    }
+
+                    &[data-location="bauble5"] {
+                        grid-row: 5/6;
+                        grid-column: 6/7
+                    }
+
+                    &[data-location="cosmetics"] {
+                        grid-row: 6/7;
+                        grid-column: 6/7
+                    }
+
+                    &[data-location="stowMain"] {
+                        grid-row: 6/7;
+                        grid-column: 3/4;
+                        top: -50%;
+                        left: -50%
+                    }
+
+                    &[data-location="mainHand"] {
+                        grid-row: 7/8;
+                        grid-column: 3/4;
+                        transform-origin: center;
+                        transform: scale(1.2);
+                        top: -30%;
+                        left: -50%
+                    }
+
+                    &[data-location="stowOff"] {
+                        grid-row: 6/7;
+                        grid-column: 4/5;
+                        top: -50%;
+                        right: -50%
+                    }
+
+                    &[data-location="offHand"] {
+                        grid-row: 7/8;
+                        grid-column: 4/5;
+                        transform-origin: center;
+                        transform: scale(1.2);
+                        top: -30%;
+                        right: -50%
+                    }
+                }
+            }
+        }
     }
-
-
 }

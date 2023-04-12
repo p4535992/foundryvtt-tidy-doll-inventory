@@ -1,0 +1,40 @@
+div.window-app.sheet.item {
+    .dollInventory.location-selector {
+        padding: 0;
+        color: red;
+        font-size: smaller;
+        flex-direction: column;
+        flex-wrap: wrap;
+        position: absolute;
+        right: -1.1rem;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.593);
+        max-width: 1.1rem;
+
+        div.location {
+            &:hover {
+                transform: scale(1.6)
+            }
+
+            input {
+                margin: 0;
+                display: inline;
+                width: 1rem;
+                height: 1rem;
+                box-shadow: 0px 0px 1rem orange inset;
+
+                opacity: 0.5;
+
+
+
+                &[checked] {
+                    -webkit-filter: grayscale(0%);
+                    box-shadow: 0px 0px 1rem green inset;
+
+
+                }
+            }
+        }
+
+    }
+}

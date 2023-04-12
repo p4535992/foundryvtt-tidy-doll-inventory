@@ -1,0 +1,13 @@
+<div class="dollInventory location-selector flexcol">
+
+    {{log this}}
+    {{#each this as |location id|}}
+    <div class="location {{id}}" data-tooltip="{{location.label}}"
+        style="background:url({{location.icon}})">
+        <input type="checkbox"
+            name="flags.tidy-doll-inventory.inventoryLocations.{{id}}.available"
+            data-location="{{id}}"
+            {{#if location.available}}checked{{/if}}/>
+    </div>
+    {{/each}}
+</div>

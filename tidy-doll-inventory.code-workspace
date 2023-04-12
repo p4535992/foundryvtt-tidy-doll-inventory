@@ -1,6 +1,5 @@
 {
-	"folders": [
-		{
+	"folders": [{
 			"path": "."
 		},
 		{
@@ -13,8 +12,17 @@
 			"path": "../../../../../../../../Program Files/Foundry Virtual Tabletop_10"
 		},
 		{
+			"path": "../role-n-play"
+		},
+		{
 			"path": "../../systems/noc"
+		},
+		{
+			"path": "../../Config"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"editor.suggest.snippetsPreventQuickSuggestions": false,
+		"aiXcoder.showTrayIcon": true
+	}
 }

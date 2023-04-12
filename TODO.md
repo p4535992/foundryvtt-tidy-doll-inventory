@@ -1,0 +1,2 @@
+- mettre colors dans settings de fiches, appeller le linear gradient en inline-style depuis template (header+left-pane)
+  -idem pour les background images des locations
