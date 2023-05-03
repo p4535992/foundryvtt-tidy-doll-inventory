@@ -18,7 +18,10 @@
 			"path": "../../systems/noc"
 		},
 		{
-			"path": "../../Config"
+			"path": "../role-n-play_Boite_initiation"
+		},
+		{
+			"path": "../stable-images"
 		}
 	],
 	"settings": {

@@ -2,112 +2,112 @@ export let dollConfig = {
     inventory: {
         head: {
             label: "Head",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/head.png",
             item: {}
         },
         chest: {
             label: "Chest",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/chest.png",
             item: {}
         },
         pants: {
             label: "Pants",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/pants.png",
             item: {}
         },
         boots: {
             label: "Boots",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/boots.png",
             item: {}
         },
         gloves: {
             label: "Gloves",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/gloves.png",
             item: {}
         },
         cloak: {
             label: "Cloak",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/cloak.png",
             item: {}
         },
         stowMain: {
             label: "Stow Main",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/hand.png",
             item: {}
         },
         mainHand: {
             label: "Main hand",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/hand.png",
             item: {}
         },
         stowOff: {
             label: "Stow Off",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/hand.png",
             item: {}
         },
         offHand: {
             label: "Off Hand",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/hand.png",
             item: {}
         },
         bauble1: {
             label: "Bauble 1",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/bauble.png",
             item: {}
         },
         bauble2: {
             label: "Bauble 2",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/bauble.png",
             item: {}
         },
         bauble3: {
             label: "Bauble 3",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/bauble.png",
             item: {}
         },
         bauble4: {
             label: "Bauble 4",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/bauble.png",
             item: {}
         },
         bauble5: {
             label: "Bauble 5",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/bauble.png",
             item: {}
         },
         cosmetics: {
             label: "Cosmetics",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/cosmetics.png",
             item: {}
         },
         ready1: {
-            label: "Ready iem 1",
-            icon: "",
+            label: "Ready item 1",
+            icon: "modules/tidy-doll-inventory/assets/ready.png",
             item: {}
         },
         ready2: {
-            label: "Ready iem 2",
-            icon: "",
+            label: "Ready item 2",
+            icon: "modules/tidy-doll-inventory/assets/ready.png",
             item: {}
         },
         ready3: {
-            label: "Ready iem 3",
-            icon: "",
+            label: "Ready item 3",
+            icon: "modules/tidy-doll-inventory/assets/ready.png",
             item: {}
         },
         ready4: {
-            label: "Ready iem 4",
-            icon: "",
+            label: "Ready item 4",
+            icon: "modules/tidy-doll-inventory/assets/ready.png",
             item: {}
         },
         bag: {
             label: "Bag",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/bag.png",
             item: {}
         },
         coinPouch: {
             label: "Coin Pouch",
-            icon: "",
+            icon: "modules/tidy-doll-inventory/assets/coin_pouch.png",
             item: {}
         },
 
