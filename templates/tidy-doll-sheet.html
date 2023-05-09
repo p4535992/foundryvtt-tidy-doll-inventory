@@ -567,339 +567,400 @@
                     </div>
 
                     <section class="center-pane ">
-                        <div class="inventory-toggle">
-                            <i class="fa-solid fa-sack"></i>
-                        </div>
+
                         <div class="flexrow">
-                            <div class="inventory-doll item-list"
-                                style="background-image:url({{dollInventory.background}})">
-                                {{#each dollInventory.location as |location
-                                locationID|}}
-                                <div class="doll-location"
-                                    data-location="{{locationID}}"
-                                    style="background-image:url(
-                                    {{#if location.item._id}}
-                                    {{location.item.img}}
-                                    {{else}}
-                                    {{location.icon}}
-                                    {{/if}}
-                                    )"
-                                    {{#if location.item.name}}
-                                    data-tooltip="{{location.item.name}}"
-                                    {{/if}}>
-                                    <h4 class="location-name">{{location.label}}</h4>
-                                    {{#if location.item.name}}
-                                    <li class="location-item item"
-                                        data-tooltip="{{location.item.name}}">
-                                        <div class="item-control flexcol"
-                                            data-item="{{location.item._id}}">
-                                            <a data-tooltip="edit item"
-                                                data-action="edit"
-                                                class="item-edit"><i
-                                                    class="fa-solid
-                                                    fa-pen-to-square"></i></a>
-                                            <a data-tooltip="use item"
-                                                data-action="use"><i
-                                                    class="fa-solid
-                                                    fa-dice-d20"></i></a>
-                                            <a data-tooltip="empty slot"
-                                                data-action="clear"><i
-                                                    class="fa-solid fa-trash"></i></a>
-                                        </div>
-                                    </li>
+                            <div class="tidy-doll">
+                                <div class="inventory-doll item-list"
+                                    style="background-image:url({{dollInventory.background}})">
+                                    <div class="doll-switch" data-hand="main"><i
+                                            class="fas
+                                            fa-refresh"></i></div>
+                                    <div class="doll-switch" data-hand="off"><i
+                                            class="fas
+                                            fa-refresh"></i></div>
+                                    {{#each dollInventory.location as |location
+                                    locationID|}}
+                                    <div class="doll-location"
+                                        data-location="{{locationID}}"
+                                        style="background-image:url(
+                                        {{#if location.item.img}}
+                                        {{location.item.img}}
+                                        {{else}}
+                                        {{location.icon}}
+                                        {{/if}}
+                                        )"
+                                        {{#if location.item.name}}
+                                        data-tooltip="{{location.item.name}}"
+                                        {{/if}}>
+                                        <h4 class="location-name">{{location.label}}</h4>
+                                        {{#if location.item.name}}
+                                        <li class="location-item item"
+                                            data-tooltip="{{location.item.name}}">
+                                            <div class="item-control flexcol"
+                                                data-item="{{location.item._id}}">
+                                                <a data-tooltip="edit item"
+                                                    data-action="edit"
+                                                    class="item-open-sheet"><i
+                                                        class="fa-solid
+                                                        fa-pen-to-square"></i></a>
+                                                <a data-tooltip="use item"
+                                                    data-action="use"><i
+                                                        class="fa-solid
+                                                        fa-dice-d20"></i></a>
+                                                <a data-tooltip="empty slot"
+                                                    data-action="clear"><i
+                                                        class="fa-solid
+                                                        fa-trash"></i></a>
+                                            </div>
+                                        </li>
 
-                                    {{/if}}
+                                        {{/if}}
 
+                                    </div>
+                                    {{/each}}
                                 </div>
-                                {{/each}}
-                            </div>
-                            <div class="tidy-tools">
-                                <div class="favorites-target"></div>
+                                <div class="doll-bags">
+                                    <ul class="item-list">
+                                        {{#each dollInventory.bags as |bag id|}}
+                                        {{#if bag.system.equipped}}
+                                        {{log bag}}
+                                        <li class="item bag"
+                                            data-item-id="{{bag._id}}">
+                                            <h4>{{bag.name}}</h4>
+                                            <ul class="flexrow item-list
+                                                bag-list">
+                                                {{#each
+                                                bag.flags.tidy-doll-inventory.bagSlots.innerItems
+                                                as |item itId|}}
+                                                {{#if item}}
+                                                {{log item}}
+                                                <li class="item bagSlot"
+                                                    data-slot-index="{{itId}}"
+                                                    data-tooltip="{{item.name}}"
+                                                    style="background-image:url({{item.img}})">
+                                                    <div class="item-control
+                                                        flexcol"
+                                                        data-item="{{item.itemId}}">
+                                                        <a data-tooltip="edit
+                                                            item"
+                                                            data-action="edit"
+                                                            class="item-open-sheet"><i
+                                                                class="fa-solid
+                                                                fa-pen-to-square"></i></a>
+                                                        <a data-tooltip="use
+                                                            item"
+                                                            data-action="use"><i
+                                                                class="fa-solid
+                                                                fa-dice-d20"></i></a>
+                                                        <a data-tooltip="empty
+                                                            slot"
+                                                            data-action="clear"><i
+                                                                class="fa-solid
+                                                                fa-trash"></i></a>
+                                                    </div>
+                                                </li>
+                                                {{else}}
+                                                <li class="item bagSlot"
+                                                    data-slot-index="{{itId}}">empty</li>
+                                                {{/if}}
 
-                                {{!-- Traits --}}
-                                <div class="alt-trait-pos"></div>
-
-                                {{!-- Actions --}}
-                                <div class="actions-target list-layout"></div>
-                            </div>
-                        </div>
-                        {{#unless @root.isNPC}} {{#with encumbrance}}
-                        <div class="encumbrance {{#if
-                            encumbered}}encumbered{{/if}}" title="{{localize
-                            'TIDY5E.Encumbrance'}}">
-                            <span class="encumbrance-bar"
-                                style="width:{{pct}}%"></span>
-                            <span class="encumbrance-label">{{value}} / {{max}}</span>
-                            <i class="encumbrance-breakpoint encumbrance-33
-                                arrow-up"></i>
-                            <i class="encumbrance-breakpoint encumbrance-33
-                                arrow-down"></i>
-                            <i class="encumbrance-breakpoint encumbrance-66
-                                arrow-up"></i>
-                            <i class="encumbrance-breakpoint encumbrance-66
-                                arrow-down"></i>
-                        </div>
-                        {{/with}} {{/unless}}
-                    </section>
-
-                </div>
-
-                <div class="tab inventory {{#if
-                    actor.flags.tidy5e-sheet.inventory-grid}}grid{{/if}}"
-                    data-group="primary" data-tab="inventory">
-                    {{#if actor.flags.tidy5e-sheet.inventory-grid}}
-                    {{>
-                    "modules/tidy5e-sheet/templates/actors/parts/tidy5e-inventory-grid.html"
-                    sections=inventory}}
-                    {{else}}
-                    {{>
-                    "modules/tidy5e-sheet/templates/actors/parts/tidy5e-inventory.html"
-                    sections=inventory}}
-                    {{/if}}
-                </div>
-                {{!-- Spellbook Tab --}}
-                <div class="tab spellbook {{#if
-                    actor.flags.tidy5e-sheet.spellbook-grid}}grid{{/if}}"
-                    data-group="primary" data-tab="spellbook">
-                    {{#if actor.flags.tidy5e-sheet.spellbook-grid}}
-                    {{>
-                    "modules/tidy5e-sheet/templates/actors/parts/tidy5e-spellbook-grid.html"}}
-                    {{else}}
-                    {{>
-                    "modules/tidy5e-sheet/templates/actors/parts/tidy5e-spellbook.html"}}
-                    {{/if}}
-                </div>
-
-                {{!-- Features Tab --}}
-                <div class="tab features" data-group="primary"
-                    data-tab="features">
-                    {{>
-                    "modules/tidy5e-sheet/templates/actors/parts/tidy5e-features.html"
-                    sections=features}}
-                </div>
-
-                {{!-- Effects Tab --}}
-                <div class="tab effects" data-group="primary"
-                    data-tab="effects">
-                    {{>
-                    "modules/tidy5e-sheet/templates/actors/parts/tidy5e-effects.html"}}
-                </div>
-
-                {{!-- Biography Tab --}}
-                <div class="tab biography" data-group="primary"
-                    data-tab="biography">
-                    <div class="notes-container">
-                        <div class="top-notes note-entries">
-                            <article>
-                                <ul class="character-details">
-                                    <li><span>{{ localize "TIDY5E.Gender" }}:</span><span
-                                            {{#if
-                                            owner}}contenteditable="true"{{/if}}
-                                            spellcheck="false"
-                                            data-target="{{actor._id}}-gender"
-                                            data-maxlength="40">{{actor.flags.tidy5e-sheet.gender}}</span><input
-                                            data-input="{{actor._id}}-gender"
-                                            type="hidden"
-                                            name="flags.tidy5e-sheet.gender"
-                                            value="{{actor.flags.tidy5e-sheet.gender}}"></li>
-                                    <li><span>{{ localize "TIDY5E.Age" }}:</span><span
-                                            {{#if
-                                            owner}}contenteditable="true"{{/if}}
-                                            spellcheck="false"
-                                            data-target="{{actor._id}}-age"
-                                            data-maxlength="5">{{actor.flags.tidy5e-sheet.age}}</span><input
-                                            data-input="{{actor._id}}-age"
-                                            type="hidden"
-                                            name="flags.tidy5e-sheet.age"
-                                            value="{{actor.flags.tidy5e-sheet.age}}"></li>
-                                    <li><span>{{ localize "TIDY5E.Height" }}:</span><span
-                                            {{#if
-                                            owner}}contenteditable="true"{{/if}}
-                                            spellcheck="false"
-                                            data-target="{{actor._id}}-height"
-                                            data-maxlength="20">{{actor.flags.tidy5e-sheet.height}}</span><input
-                                            data-input="{{actor._id}}-height"
-                                            type="hidden"
-                                            name="flags.tidy5e-sheet.height"
-                                            value="{{actor.flags.tidy5e-sheet.height}}"></li>
-                                    <li><span>{{ localize "TIDY5E.Weight" }}:</span><span
-                                            {{#if
-                                            owner}}contenteditable="true"{{/if}}
-                                            spellcheck="false"
-                                            data-target="{{actor._id}}-weight"
-                                            data-maxlength="20">{{actor.flags.tidy5e-sheet.weight}}</span><input
-                                            data-input="{{actor._id}}-weight"
-                                            type="hidden"
-                                            name="flags.tidy5e-sheet.weight"
-                                            value="{{actor.flags.tidy5e-sheet.weight}}"></li>
-                                    <li><span>{{ localize "TIDY5E.Eyes" }}:</span><span
-                                            {{#if
-                                            owner}}contenteditable="true"{{/if}}
-                                            spellcheck="false"
-                                            data-target="{{actor._id}}-eyes"
-                                            data-maxlength="40">{{actor.flags.tidy5e-sheet.eyes}}</span><input
-                                            data-input="{{actor._id}}-eyes"
-                                            type="hidden"
-                                            name="flags.tidy5e-sheet.eyes"
-                                            value="{{actor.flags.tidy5e-sheet.eyes}}"></li>
-                                    <li><span>{{ localize "TIDY5E.Skin" }}:</span><span
-                                            {{#if
-                                            owner}}contenteditable="true"{{/if}}
-                                            spellcheck="false"
-                                            data-target="{{actor._id}}-skin"
-                                            data-maxlength="40">{{actor.flags.tidy5e-sheet.skin}}</span><input
-                                            data-input="{{actor._id}}-skin"
-                                            type="hidden"
-                                            name="flags.tidy5e-sheet.skin"
-                                            value="{{actor.flags.tidy5e-sheet.skin}}"></li>
-                                    <li><span>{{ localize "TIDY5E.Hair" }}:</span><span
-                                            {{#if
-                                            owner}}contenteditable="true"{{/if}}
-                                            spellcheck="false"
-                                            data-target="{{actor._id}}-hair"
-                                            data-maxlength="40">{{actor.flags.tidy5e-sheet.hair}}</span><input
-                                            data-input="{{actor._id}}-hair"
-                                            type="hidden"
-                                            name="flags.tidy5e-sheet.hair"
-                                            value="{{actor.flags.tidy5e-sheet.hair}}"></li>
+                                            </li>
+                                            {{/each}}
+                                        </ul>
+                                    </li>
+                                    {{/if}}
+                                    {{/each}}
                                 </ul>
+
+                            </div>
+                        </div>
+                        <div class="tidy-tools">
+                            <div class="favorites-target"></div>
+
+                            {{!-- Traits --}}
+                            <div class="alt-trait-pos"></div>
+
+                            {{!-- Actions --}}
+                            <div class="actions-target list-layout"></div>
+                        </div>
+                    </div>
+                    {{#unless @root.isNPC}} {{#with encumbrance}}
+                    <div class="encumbrance {{#if
+                        encumbered}}encumbered{{/if}}" title="{{localize
+                        'TIDY5E.Encumbrance'}}">
+                        <span class="encumbrance-bar"
+                            style="width:{{pct}}%"></span>
+                        <span class="encumbrance-label">{{value}} / {{max}}</span>
+                        <i class="encumbrance-breakpoint encumbrance-33
+                            arrow-up"></i>
+                        <i class="encumbrance-breakpoint encumbrance-33
+                            arrow-down"></i>
+                        <i class="encumbrance-breakpoint encumbrance-66
+                            arrow-up"></i>
+                        <i class="encumbrance-breakpoint encumbrance-66
+                            arrow-down"></i>
+                    </div>
+                    {{/with}} {{/unless}}
+                </section>
+
+            </div>
+
+            <div class="tab inventory {{#if
+                actor.flags.tidy5e-sheet.inventory-grid}}grid{{/if}}"
+                data-group="primary" data-tab="inventory">
+                {{#if actor.flags.tidy5e-sheet.inventory-grid}}
+                {{>
+                "modules/tidy5e-sheet/templates/actors/parts/tidy5e-inventory-grid.html"
+                sections=inventory}}
+                {{else}}
+                {{>
+                "modules/tidy5e-sheet/templates/actors/parts/tidy5e-inventory.html"
+                sections=inventory}}
+                {{/if}}
+            </div>
+            {{!-- Spellbook Tab --}}
+            <div class="tab spellbook {{#if
+                actor.flags.tidy5e-sheet.spellbook-grid}}grid{{/if}}"
+                data-group="primary" data-tab="spellbook">
+                {{#if actor.flags.tidy5e-sheet.spellbook-grid}}
+                {{>
+                "modules/tidy5e-sheet/templates/actors/parts/tidy5e-spellbook-grid.html"}}
+                {{else}}
+                {{>
+                "modules/tidy5e-sheet/templates/actors/parts/tidy5e-spellbook.html"}}
+                {{/if}}
+            </div>
+
+            {{!-- Features Tab --}}
+            <div class="tab features" data-group="primary"
+                data-tab="features">
+                {{>
+                "modules/tidy5e-sheet/templates/actors/parts/tidy5e-features.html"
+                sections=features}}
+            </div>
+
+            {{!-- Effects Tab --}}
+            <div class="tab effects" data-group="primary"
+                data-tab="effects">
+                {{>
+                "modules/tidy5e-sheet/templates/actors/parts/tidy5e-effects.html"}}
+            </div>
+
+            {{!-- Biography Tab --}}
+            <div class="tab biography" data-group="primary"
+                data-tab="biography">
+                <div class="notes-container">
+                    <div class="top-notes note-entries">
+                        <article>
+                            <ul class="character-details">
+                                <li><span>{{ localize "TIDY5E.Gender" }}:</span><span
+                                        {{#if
+                                        owner}}contenteditable="true"{{/if}}
+                                        spellcheck="false"
+                                        data-target="{{actor._id}}-gender"
+                                        data-maxlength="40">{{actor.flags.tidy5e-sheet.gender}}</span><input
+                                        data-input="{{actor._id}}-gender"
+                                        type="hidden"
+                                        name="flags.tidy5e-sheet.gender"
+                                        value="{{actor.flags.tidy5e-sheet.gender}}"></li>
+                                <li><span>{{ localize "TIDY5E.Age" }}:</span><span
+                                        {{#if
+                                        owner}}contenteditable="true"{{/if}}
+                                        spellcheck="false"
+                                        data-target="{{actor._id}}-age"
+                                        data-maxlength="5">{{actor.flags.tidy5e-sheet.age}}</span><input
+                                        data-input="{{actor._id}}-age"
+                                        type="hidden"
+                                        name="flags.tidy5e-sheet.age"
+                                        value="{{actor.flags.tidy5e-sheet.age}}"></li>
+                                <li><span>{{ localize "TIDY5E.Height" }}:</span><span
+                                        {{#if
+                                        owner}}contenteditable="true"{{/if}}
+                                        spellcheck="false"
+                                        data-target="{{actor._id}}-height"
+                                        data-maxlength="20">{{actor.flags.tidy5e-sheet.height}}</span><input
+                                        data-input="{{actor._id}}-height"
+                                        type="hidden"
+                                        name="flags.tidy5e-sheet.height"
+                                        value="{{actor.flags.tidy5e-sheet.height}}"></li>
+                                <li><span>{{ localize "TIDY5E.Weight" }}:</span><span
+                                        {{#if
+                                        owner}}contenteditable="true"{{/if}}
+                                        spellcheck="false"
+                                        data-target="{{actor._id}}-weight"
+                                        data-maxlength="20">{{actor.flags.tidy5e-sheet.weight}}</span><input
+                                        data-input="{{actor._id}}-weight"
+                                        type="hidden"
+                                        name="flags.tidy5e-sheet.weight"
+                                        value="{{actor.flags.tidy5e-sheet.weight}}"></li>
+                                <li><span>{{ localize "TIDY5E.Eyes" }}:</span><span
+                                        {{#if
+                                        owner}}contenteditable="true"{{/if}}
+                                        spellcheck="false"
+                                        data-target="{{actor._id}}-eyes"
+                                        data-maxlength="40">{{actor.flags.tidy5e-sheet.eyes}}</span><input
+                                        data-input="{{actor._id}}-eyes"
+                                        type="hidden"
+                                        name="flags.tidy5e-sheet.eyes"
+                                        value="{{actor.flags.tidy5e-sheet.eyes}}"></li>
+                                <li><span>{{ localize "TIDY5E.Skin" }}:</span><span
+                                        {{#if
+                                        owner}}contenteditable="true"{{/if}}
+                                        spellcheck="false"
+                                        data-target="{{actor._id}}-skin"
+                                        data-maxlength="40">{{actor.flags.tidy5e-sheet.skin}}</span><input
+                                        data-input="{{actor._id}}-skin"
+                                        type="hidden"
+                                        name="flags.tidy5e-sheet.skin"
+                                        value="{{actor.flags.tidy5e-sheet.skin}}"></li>
+                                <li><span>{{ localize "TIDY5E.Hair" }}:</span><span
+                                        {{#if
+                                        owner}}contenteditable="true"{{/if}}
+                                        spellcheck="false"
+                                        data-target="{{actor._id}}-hair"
+                                        data-maxlength="40">{{actor.flags.tidy5e-sheet.hair}}</span><input
+                                        data-input="{{actor._id}}-hair"
+                                        type="hidden"
+                                        name="flags.tidy5e-sheet.hair"
+                                        value="{{actor.flags.tidy5e-sheet.hair}}"></li>
+                            </ul>
+                        </article>
+                    </div>
+                    <div class="main-notes">
+                        <div class="left-notes note-entries">
+                            <article>
+                                <div class="section-titles biopage">{{
+                                    localize "DND5E.PersonalityTraits" }}</div>
+                                {{editor system.details.trait
+                                target="system.details.trait" button=true
+                                editable=editable engine="prosemirror"
+                                collaborate=false}}
+                            </article>
+                            <article>
+                                <div class="section-titles biopage">{{
+                                    localize "DND5E.Ideals" }}</div>
+                                {{editor system.details.ideal
+                                target="system.details.ideal" button=true
+                                editable=editable engine="prosemirror"
+                                collaborate=false}}
+                            </article>
+                            <article>
+                                <div class="section-titles biopage">{{
+                                    localize "DND5E.Bonds" }}</div>
+                                {{editor system.details.bond
+                                target="system.details.bond" button=true
+                                editable=editable engine="prosemirror"
+                                collaborate=false}}
+                            </article>
+                            <article>
+                                <div class="section-titles biopage">{{
+                                    localize "DND5E.Flaws" }}</div>
+                                {{editor system.details.flaw
+                                target="system.details.flaw" button=true
+                                editable=editable engine="prosemirror"
+                                collaborate=false}}
                             </article>
                         </div>
-                        <div class="main-notes">
-                            <div class="left-notes note-entries">
-                                <article>
-                                    <div class="section-titles biopage">{{
-                                        localize "DND5E.PersonalityTraits" }}</div>
-                                    {{editor system.details.trait
-                                    target="system.details.trait" button=true
-                                    editable=editable engine="prosemirror"
-                                    collaborate=false}}
-                                </article>
-                                <article>
-                                    <div class="section-titles biopage">{{
-                                        localize "DND5E.Ideals" }}</div>
-                                    {{editor system.details.ideal
-                                    target="system.details.ideal" button=true
-                                    editable=editable engine="prosemirror"
-                                    collaborate=false}}
-                                </article>
-                                <article>
-                                    <div class="section-titles biopage">{{
-                                        localize "DND5E.Bonds" }}</div>
-                                    {{editor system.details.bond
-                                    target="system.details.bond" button=true
-                                    editable=editable engine="prosemirror"
-                                    collaborate=false}}
-                                </article>
-                                <article>
-                                    <div class="section-titles biopage">{{
-                                        localize "DND5E.Flaws" }}</div>
-                                    {{editor system.details.flaw
-                                    target="system.details.flaw" button=true
-                                    editable=editable engine="prosemirror"
-                                    collaborate=false}}
-                                </article>
-                            </div>
 
-                            <div class="right-notes note-entries">
-                                <article class="appearance-notes">
-                                    <div class="section-titles biopage">{{
-                                        localize "DND5E.Appearance" }}</div>
-                                    {{editor system.details.appearance
-                                    target="system.details.appearance"
-                                    button=true editable=editable
-                                    engine="prosemirror" collaborate=false}}
-                                </article>
-                                <article class="biography-notes">
-                                    <div class="section-titles">{{ localize
-                                        "DND5E.Background" }}/{{ localize
-                                        "DND5E.Biography" }}</div>
-                                    {{editor biographyHTML
-                                    target="system.details.biography.value"
-                                    button=true editable=editable
-                                    engine="prosemirror" collaborate=false}}
-                                </article>
-                            </div>
+                        <div class="right-notes note-entries">
+                            <article class="appearance-notes">
+                                <div class="section-titles biopage">{{
+                                    localize "DND5E.Appearance" }}</div>
+                                {{editor system.details.appearance
+                                target="system.details.appearance"
+                                button=true editable=editable
+                                engine="prosemirror" collaborate=false}}
+                            </article>
+                            <article class="biography-notes">
+                                <div class="section-titles">{{ localize
+                                    "DND5E.Background" }}/{{ localize
+                                    "DND5E.Biography" }}</div>
+                                {{editor biographyHTML
+                                target="system.details.biography.value"
+                                button=true editable=editable
+                                engine="prosemirror" collaborate=false}}
+                            </article>
                         </div>
-
                     </div>
-                </div>
 
-                {{!-- Journal Tab --}}
-                <div class="tab journal" data-group="primary"
-                    data-tab="journal">
-                    <div class="left-notes note-entries">
-                        <article>
-                            <div class="section-titles">
-                                <input type="text"
-                                    name="flags.tidy5e-sheet.notes1.name"
-                                    value="{{actor.flags.tidy5e-sheet.notes1.name}}"
-                                    placeholder="{{ localize 'TIDY5E.JournalPoi'
-                                    }}"/>
-                            </div>
-                            {{editor journalNotes1HTML
-                            target="flags.tidy5e-sheet.notes1.value" button=true
-                            editable=editable engine="prosemirror"
-                            collaborate=false}}
-                        </article>
-                        <article>
-                            <div class="section-titles">
-                                <input type="text"
-                                    name="flags.tidy5e-sheet.notes2.name"
-                                    value="{{actor.flags.tidy5e-sheet.notes2.name}}"
-                                    placeholder="{{ localize 'TIDY5E.JournalLoi'
-                                    }}"/>
-                            </div>
-                            {{editor journalNotes2HTML
-                            target="flags.tidy5e-sheet.notes2.value" button=true
-                            editable=editable engine="prosemirror"
-                            collaborate=false}}
-                        </article>
-                        <article>
-                            <div class="section-titles">
-                                <input type="text"
-                                    name="flags.tidy5e-sheet.notes3.name"
-                                    value="{{actor.flags.tidy5e-sheet.notes3.name}}"
-                                    placeholder="{{ localize
-                                    'TIDY5E.JournalQuests' }}"/>
-                            </div>
-                            {{editor journalNotes3HTML
-                            target="flags.tidy5e-sheet.notes3.value" button=true
-                            editable=editable engine="prosemirror"
-                            collaborate=false}}
-                        </article>
-                        <article>
-                            <div class="section-titles">
-                                <input type="text"
-                                    name="flags.tidy5e-sheet.notes4.name"
-                                    value="{{actor.flags.tidy5e-sheet.notes4.name}}"
-                                    placeholder="{{ localize
-                                    'TIDY5E.JournalMisc' }}"/>
-                            </div>
-                            {{editor journalNotes4HTML
-                            target="flags.tidy5e-sheet.notes4.value" button=true
-                            editable=editable engine="prosemirror"
-                            collaborate=false}}
-                        </article>
-                    </div>
-                    <div class="right-notes note-entries">
-                        <article class="journal-notes">
-                            <div class="section-titles">{{ localize
-                                'TIDY5E.JournalEntries' }}</div>
-                            {{editor journalHTML
-                            target="flags.tidy5e-sheet.notes.value" button=true
-                            editable=editable engine="prosemirror"
-                            collaborate=false}}
-                        </article>
-                    </div>
                 </div>
+            </div>
 
-                <div class="tab config"
-                    data-group="primary" data-tab="config">
-
-                    {{>
-                    "modules/tidy-doll-inventory/templates/sheet-config.hbs"}}
+            {{!-- Journal Tab --}}
+            <div class="tab journal" data-group="primary"
+                data-tab="journal">
+                <div class="left-notes note-entries">
+                    <article>
+                        <div class="section-titles">
+                            <input type="text"
+                                name="flags.tidy5e-sheet.notes1.name"
+                                value="{{actor.flags.tidy5e-sheet.notes1.name}}"
+                                placeholder="{{ localize 'TIDY5E.JournalPoi'
+                                }}"/>
+                        </div>
+                        {{editor journalNotes1HTML
+                        target="flags.tidy5e-sheet.notes1.value" button=true
+                        editable=editable engine="prosemirror"
+                        collaborate=false}}
+                    </article>
+                    <article>
+                        <div class="section-titles">
+                            <input type="text"
+                                name="flags.tidy5e-sheet.notes2.name"
+                                value="{{actor.flags.tidy5e-sheet.notes2.name}}"
+                                placeholder="{{ localize 'TIDY5E.JournalLoi'
+                                }}"/>
+                        </div>
+                        {{editor journalNotes2HTML
+                        target="flags.tidy5e-sheet.notes2.value" button=true
+                        editable=editable engine="prosemirror"
+                        collaborate=false}}
+                    </article>
+                    <article>
+                        <div class="section-titles">
+                            <input type="text"
+                                name="flags.tidy5e-sheet.notes3.name"
+                                value="{{actor.flags.tidy5e-sheet.notes3.name}}"
+                                placeholder="{{ localize
+                                'TIDY5E.JournalQuests' }}"/>
+                        </div>
+                        {{editor journalNotes3HTML
+                        target="flags.tidy5e-sheet.notes3.value" button=true
+                        editable=editable engine="prosemirror"
+                        collaborate=false}}
+                    </article>
+                    <article>
+                        <div class="section-titles">
+                            <input type="text"
+                                name="flags.tidy5e-sheet.notes4.name"
+                                value="{{actor.flags.tidy5e-sheet.notes4.name}}"
+                                placeholder="{{ localize
+                                'TIDY5E.JournalMisc' }}"/>
+                        </div>
+                        {{editor journalNotes4HTML
+                        target="flags.tidy5e-sheet.notes4.value" button=true
+                        editable=editable engine="prosemirror"
+                        collaborate=false}}
+                    </article>
                 </div>
-            </section>
-        </div>
-    </form>
+                <div class="right-notes note-entries">
+                    <article class="journal-notes">
+                        <div class="section-titles">{{ localize
+                            'TIDY5E.JournalEntries' }}</div>
+                        {{editor journalHTML
+                        target="flags.tidy5e-sheet.notes.value" button=true
+                        editable=editable engine="prosemirror"
+                        collaborate=false}}
+                    </article>
+                </div>
+            </div>
+
+            <div class="tab config"
+                data-group="primary" data-tab="config">
+
+                {{>
+                "modules/tidy-doll-inventory/templates/sheet-config.hbs"}}
+            </div>
+        </section>
+    </div>
+</form>

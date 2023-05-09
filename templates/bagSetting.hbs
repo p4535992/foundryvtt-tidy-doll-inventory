@@ -1,0 +1,23 @@
+<div class="form-group stacked">
+    <label>Doll inventory</label>
+    {{#ifequal system.capacity.type "items"}}
+    <label class="checkbox">
+        <input type="checkbox"
+            name="flags.tidy-doll-inventory.bagSlots.available" {{checked
+            flags.tidy-doll-inventory.bagSlots.available}}>
+        Add inventory slots
+    </label>
+
+    <label class="checkbox">
+        <input type="range"
+            name="flags.tidy-doll-inventory.bagSlots.weightRatio" step="0.1"
+            min="0"
+            max="1" value="{{flags.tidy-doll-inventory.bagSlots.weightRatio}}"/>
+        Weight ratio : {{flags.tidy-doll-inventory.bagSlots.weightRatio}}</label>
+    {{/ifequal}}
+    {{#ifnotequal system.capacity.type "items"}}
+    <label>You have to set capacity type to "items" to unable doll inventory
+        config</label>
+    {{/ifnotequal}}
+
+</div>

@@ -32,6 +32,29 @@ Hooks.once('init', async function () {
         default: false,
     });
 
+
+    //handelbar helpers
+
+    Handlebars.registerHelper('ifequal', function (a, b, options) {
+        if (a == b) { return options.fn(this); }
+        return options.inverse(this);
+    });
+
+    Handlebars.registerHelper('ifnotequal', function (a, b, options) {
+        if (a != b) { return options.fn(this); }
+        return options.inverse(this);
+    });
+    Handlebars.registerHelper('repeat', function (n, block) {
+        var accum = '';
+        for (var i = 0; i < n; ++i) {
+            block.data.index = i;
+            block.data.first = i === 0;
+            block.data.last = i === (n - 1);
+            accum += block.fn(this);
+        }
+        return accum;
+    });
+
 });
 
 Hooks.once('ready', async function () {
@@ -39,44 +62,71 @@ Hooks.once('ready', async function () {
 });
 Hooks.on("renderItemSheet", async function (sheet, html, options) {
 
-    //setting flags on items for dollInventory if none
+    // if items can be droped on dollInventory 
+    if (dollConfig.dropableTypes.includes(sheet.item.type)) {
 
-    let inventoryLocations = await sheet.item.getFlag("tidy-doll-inventory", "inventoryLocations");
+        //getting flags on items for dollInventory 
+        let inventoryLocations = await sheet.item.getFlag("tidy-doll-inventory", "inventoryLocations");
 
-    //creating dollInventory flag object if none
-    if (!inventoryLocations) {
-        let locations = dollConfig.inventory;
-        for (let loc in locations) {
-            //allowing all locations
-            locations[loc].available = true;
+        //creating dollInventory flag object if none
+        if (!inventoryLocations) {
+            let locations = dollConfig.inventory;
+            for (let loc in locations) {
+                //allowing all locations
+                locations[loc].available = true;
+            }
+            await sheet.item.setFlag("tidy-doll-inventory", "inventoryLocations",
+                locations
+            )
+            inventoryLocations = await sheet.item.getFlag("tidy-doll-inventory", "inventoryLocations");
         }
-        await sheet.item.setFlag("tidy-doll-inventory", "inventoryLocations",
-            locations
-        )
-        inventoryLocations = await sheet.item.getFlag("tidy-doll-inventory", "inventoryLocations");
+
+        // adding the location selector on the sheet;
+        if (game.user.isGM || await game.settings.get("tidy-doll-inventory", "playersCanSetSlot")) {
+            let htmlElement = await renderTemplate("modules/tidy-doll-inventory/templates/itemLocationSelector.hbs", inventoryLocations);
+            let form = html.find("form")
+            html.find('.sheet-header').append(htmlElement);
+
+            // flaggin locations on change checkboxes
+            for (let check of html.find("input[data-location]")) {
+                check.addEventListener('change', async function () {
+                    let location = check.dataset.location;
+                    inventoryLocations[location].available = check.checked;
+
+                    await sheet.item.setFlag("tidy-doll-inventory", "inventoryLocations",
+                        inventoryLocations
+                    )
+                })
+            }
+        }
+    }
+    // creating flags on backpacks
+    if (sheet.item.type == "backpack") {
+
+        // getting dollInventory Bags flags
+        let bagFlags = await sheet.item.getFlag("tidy-doll-inventory", "bagSlots");
+
+        //if no flag creating it
+        if (!bagFlags) {
+            let flag = {
+                weightRatio: 1,
+                computedWeight: 0,
+                innerItems: new Array(sheet.item.system.capacity.value),
+                available: false
+            }
+            await sheet.item.setFlag("tidy-doll-inventory", "bagSlots", flag);
+        }
+
+        //creating form for adding inventory slots
+        let htmlElement = await renderTemplate("modules/tidy-doll-inventory/templates/bagSetting.hbs", sheet.item);
+        let targetEl = html.find(".tab.details ")
+        targetEl.append(htmlElement)
+
+
+
     }
 
-    // adding the location selector on the sheet;
-    if (game.user.isGM || await game.settings.get("tidy-doll-inventory", "playersCanSetSlot")) {
-        let htmlElement = await renderTemplate("modules/tidy-doll-inventory/templates/itemLocationSelector.hbs", inventoryLocations);
-        let form = html.find("form")
-        html.find('.sheet-header').append(htmlElement);
 
-        // flaggin locations on change checkboxes
-
-        for (let check of html.find("input[data-location]")) {
-            console.log(check);
-            check.addEventListener('change', async function () {
-                let location = check.dataset.location;
-                inventoryLocations[location].available = check.checked;
-
-                console.log(check, inventoryLocations);
-                await sheet.item.setFlag("tidy-doll-inventory", "inventoryLocations",
-                    inventoryLocations
-                )
-            })
-        }
-    }
 
 
 })

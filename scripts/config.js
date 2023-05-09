@@ -1,4 +1,11 @@
 export let dollConfig = {
+    dropableTypes: [
+        "weapon",
+        "equipment",
+        "consumable",
+        "tool",
+        "loot"
+    ],
     inventory: {
         head: {
             label: "Head",
