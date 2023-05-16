@@ -580,7 +580,7 @@
                                             fa-refresh"></i></div>
                                     {{#each dollInventory.location as |location
                                     locationID|}}
-                                    <div class="doll-location"
+                                    <ul class="doll-location item-list"
                                         data-location="{{locationID}}"
                                         style="background-image:url(
                                         {{#if location.item.img}}
@@ -588,35 +588,29 @@
                                         {{else}}
                                         {{location.icon}}
                                         {{/if}}
-                                        )"
-                                        {{#if location.item.name}}
-                                        data-tooltip="{{location.item.name}}"
-                                        {{/if}}>
+                                        )">
                                         <h4 class="location-name">{{location.label}}</h4>
                                         {{#if location.item.name}}
                                         <li class="location-item item"
-                                            data-tooltip="{{location.item.name}}">
-                                            <div class="item-control flexcol"
-                                                data-item="{{location.item._id}}">
-                                                <a data-tooltip="edit item"
-                                                    data-action="edit"
-                                                    class="item-open-sheet"><i
-                                                        class="fa-solid
-                                                        fa-pen-to-square"></i></a>
-                                                <a data-tooltip="use item"
-                                                    data-action="use"><i
-                                                        class="fa-solid
-                                                        fa-dice-d20"></i></a>
-                                                <a data-tooltip="empty slot"
-                                                    data-action="clear"><i
-                                                        class="fa-solid
-                                                        fa-trash"></i></a>
+                                            data-item-id="{{location.item.itemId}}">
+                                            <div class="item-name
+                                                {{@root.rollableClass}}">
+
+
+                                                <div class="item-image">
+                                                    <i class="fa fa-dice-d20"></i>
+                                                </div>
+                                                <h3>
+                                                    {{item.name}}
+                                                </h3>
+
                                             </div>
+
                                         </li>
 
                                         {{/if}}
 
-                                    </div>
+                                    </ul>
                                     {{/each}}
                                 </div>
                                 <div class="doll-bags">
