@@ -1,27 +1,41 @@
 {{log this}}
-<h2>Sheet Config</h2>
-<div class="form-group">
-    <label>Inventory Background</label>
-    <img src="{{dollInventory.background}}" class="img-edit"
-        data-sheet-attr="dollInventory.background" alt="doll inventory
-        background">
+<div class="sheet-config-tab">
+
+    <h2>Sheet Config</h2>
+    <div class="form-group">
+        <label>Inventory Background</label>
+        <img src="{{dollInventory.background}}" class="img-edit"
+            data-sheet-attr="dollInventory.background" alt="doll inventory
+            background">
+    </div>
+    <div class="form-group">
+        <label>Primary Color</label>
+        <input type="color" data-color="dollInventory.primaryColor"
+            value="{{dollInventory.primaryColor}}"/>
+    </div>
+    <div class="form-group">
+        <label>Secondary Color</label>
+        <input type="color" data-color="dollInventory.secondaryColor"
+            value="{{dollInventory.secondaryColor}}"/>
+    </div>
+    <h2>Inventory location config</h2>
+    {{#each dollInventory.location as |location id|}}
+    <div class="form-group">
+        <h3>for key : {{id}} as {{location.label}}</h3>
+        <div class="flexcol">
+            <label for="dollInventory.location.{{id}}.label">
+                new label</label>
+            <input
+                type="text"
+                data-sheet-config="{{id}}"
+                value="{{location.label}}">
+        </div>
+        <div class="flexcol">
+            <label>new image</label>
+            <img src="{{location.icon}}" class="img-edit"
+                data-sheet-attr="dollInventory.location.{{id}}.icon"
+                alt="{{location.label}} icon">
+        </div>
+    </div>
+    {{/each}}
 </div>
-<div class="form-group">
-    <label>Primary Color</label>
-    <input type="color" data-color="dollInventory.primaryColor"
-        value="{{dollInventory.primaryColor}}"/>
-</div>
-<div class="form-group">
-    <label>Secondary Color</label>
-    <input type="color" data-color="dollInventory.secondaryColor"
-        value="{{dollInventory.secondaryColor}}"/>
-</div>
-<h2>Inventory location config</h2>
-{{#each dollInventory.location as |location id|}}
-<div class="form-group">
-    <label>{{location.label}}</label>
-    <img src="{{location.icon}}" class="img-edit"
-        data-sheet-attr="dollInventory.location.{{id}}.icon"
-        alt="{{location.label}} icon">
-</div>
-{{/each}}
