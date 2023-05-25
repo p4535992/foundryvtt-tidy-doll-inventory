@@ -594,6 +594,9 @@
                                     <div class="doll-switch" data-hand="off"><i
                                             class="fas
                                             fa-refresh"></i></div>
+                                    <div class="clear-slot">
+                                        <i class="fas fa-trash"></i>
+                                    </div>
                                     {{#each dollInventory.location as |location
                                     locationID|}}
                                     <ul class="doll-location item-list"
@@ -655,8 +658,8 @@
                                                     <div class="item-name
                                                         {{@root.rollableClass}}">
                                                         <div class="item-image">
-                                                            <i class="fa
-                                                                fa-dice-d20"></i>
+                                                            <i class="fa-solid
+                                                                fa-check-to-slot"></i>
                                                         </div>
                                                         <h3>
                                                             {{item.name}}
