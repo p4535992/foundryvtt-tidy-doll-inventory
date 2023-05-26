@@ -126,8 +126,8 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
 
             .tidy-tools {
                 box-shadow: -3px 0px 5px black;
-                max-width: 30%;
                 transition: 0.2s;
+                flex: 1;
 
                 .tidy5e-sheet {
                     overflow: visible;
