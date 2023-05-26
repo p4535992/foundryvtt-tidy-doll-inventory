@@ -23,9 +23,6 @@ export default class DollInventorySheet extends Tidy5eSheet {
                 { dragSelector: ".item-list .item", dropSelector: "li.bagSlot" },
                 { dragSelector: ".doll-location .item", dropSelector: "div.clear-slot" },
                 { dragSelector: ".bag .bag-item", dropSelector: "div.clear-bag-slot" },
-
-
-
             ]
 
         });
@@ -66,7 +63,6 @@ export default class DollInventorySheet extends Tidy5eSheet {
             let it = await this.actor.items.find(it => it.flags['tidy-doll-inventory']?.equippedSlot == loc);
             if (it) {
                 if (!it.system?.equipped) {
-                    console.log("not equipped", it);
                     it.update({ "system.equipped": true })
                 }
             }
@@ -199,7 +195,6 @@ export default class DollInventorySheet extends Tidy5eSheet {
         const data = TextEditor.getDragEventData(event);
         let dropItem = await Item.implementation.fromDropData(data);
 
-        console.log(event.currentTarget?.classList);
         if (this.element.find('.clear-slot.visible')[0]) {
             this.element.find('.clear-slot')[0].classList.remove('visible');
 
@@ -258,7 +253,6 @@ export default class DollInventorySheet extends Tidy5eSheet {
         let nextEmptyReady = "";
         let itemId = ev.currentTarget.closest('li.item').dataset.itemId
         let item = await this.actor.items.get(itemId)
-        console.log(this.dollInventory.location);
         for (let i = 0; i < readys.length; i++) {
             if (this.dollInventory.location[readys[i]].item == null) {
                 nextEmptyReady = readys[i];
@@ -476,7 +470,6 @@ export default class DollInventorySheet extends Tidy5eSheet {
     }
 
     switchStow(item, source) {
-        console.log(...arguments);
         let dest = "";
         switch (source) {
             case "mainHand":
