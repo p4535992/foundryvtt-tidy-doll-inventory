@@ -36,6 +36,7 @@ div.window-app.sheet.item {
 
                 &[checked] {
                     -webkit-filter: grayscale(0%);
+                    filter: grayscale(0%);
                     box-shadow: 0px 0px 1rem green inset;
 
 
@@ -43,5 +44,26 @@ div.window-app.sheet.item {
             }
         }
 
+    }
+
+    .tidy-doll-bag {
+        ol.currency {
+            i.fa-coins {
+                color: rgb(186, 163, 36);
+                text-shadow: 0px 0px 5px black,
+                    0px 0px 25px black;
+                font-size: 32px;
+                left: -20px;
+                position: relative;
+            }
+
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            list-style: none;
+        }
     }
 }

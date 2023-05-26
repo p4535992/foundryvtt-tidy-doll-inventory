@@ -102,7 +102,6 @@ Hooks.on("renderItemSheet", async function (sheet, html, options) {
     }
     // creating flags on backpacks
     if (sheet.item.type == "backpack") {
-
         // getting dollInventory Bags flags
         let bagFlags = await sheet.item.getFlag("tidy-doll-inventory", "bagSlots");
 
@@ -110,16 +109,30 @@ Hooks.on("renderItemSheet", async function (sheet, html, options) {
         if (!bagFlags) {
             let flag = {
                 weightRatio: 1,
+                currencyWeightRatio: 1,
+                containerType: "none",
+                containerOptions: {
+                    none: "none",
+                    bag: "is bag",
+                    pouch: "is coin pouch"
+                },
+                currency: {
+                    pp: 0,
+                    gp: 10,
+                    ep: 0,
+                    sp: 0,
+                    cp: 0
+                },
                 computedWeight: 0,
                 innerItems: new Array(sheet.item.system.capacity.value),
-                available: false
+                available: false,
             }
             await sheet.item.setFlag("tidy-doll-inventory", "bagSlots", flag);
         }
 
         //creating form for adding inventory slots
         let htmlElement = await renderTemplate("modules/tidy-doll-inventory/templates/bagSetting.hbs", sheet.item);
-        let targetEl = html.find(".tab.details ")
+        let targetEl = html.find(".tab.details")
         targetEl.append(htmlElement)
 
 
@@ -129,4 +142,28 @@ Hooks.on("renderItemSheet", async function (sheet, html, options) {
 
 
 
+});
+Hooks.on('item-piles-dropItem', async function (sourceActor, tokenSource, itemList, position) {
+    fromUuid(tokenSource.tokenUuid).then(async (tokenTarget) => {
+        let totalItemList = [];
+        //deleting embedded bags item if exist
+        for (let item of itemList) {
+            let flag = item.flags["tidy-doll-inventory"]?.bagSlots
+            if (flag?.containerType == "bag") {
+                let itemToAdd = [];
+                for (let item of flag.innerItems) {
+                    if (item) { itemToAdd.push(item) }
+                };
+                let idToDelete = itemToAdd.map(i => i._id);
+                totalItemList = totalItemList.concat(itemToAdd);
+            }
+        }
+        await game.itempiles.API.transferItems(sourceActor, tokenTarget, totalItemList)
+
+    })
+
+});
+
+Hooks.on('item-piles-createItemPile', async function (...args) {
+    console.log(...args)
 })

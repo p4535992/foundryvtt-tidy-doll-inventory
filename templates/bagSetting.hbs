@@ -1,23 +1,90 @@
-<div class="form-group stacked">
-    <label>Doll inventory</label>
-    {{#ifequal system.capacity.type "items"}}
-    <label class="checkbox">
-        <input type="checkbox"
-            name="flags.tidy-doll-inventory.bagSlots.available" {{checked
-            flags.tidy-doll-inventory.bagSlots.available}}>
-        Add inventory slots
-    </label>
+<div class="tidy-doll-bag">
+    <h3 class="form-header">
+        Doll inventory options
 
-    <label class="checkbox">
-        <input type="range"
-            name="flags.tidy-doll-inventory.bagSlots.weightRatio" step="0.1"
-            min="0"
-            max="1" value="{{flags.tidy-doll-inventory.bagSlots.weightRatio}}"/>
-        Weight ratio : {{flags.tidy-doll-inventory.bagSlots.weightRatio}}</label>
+        <select name="flags.tidy-doll-inventory.bagSlots.containerType">
+            {{selectOptions flags.tidy-doll-inventory.bagSlots.containerOptions
+            selected=flags.tidy-doll-inventory.bagSlots.containerType }}
+        </select>
+    </h3>
+
+
+    {{#ifequal flags.tidy-doll-inventory.bagSlots.containerType "bag"}}
+    <div class="form-group stacked">
+
+        <label>bags
+        </label>
+
+        <label class="checkbox">
+            <input type="checkbox"
+                name="flags.tidy-doll-inventory.bagSlots.available" {{checked
+                flags.tidy-doll-inventory.bagSlots.available}}>
+            Add inventory slots (as many as "capacity")
+        </label>
+
+        <label class="checkbox">
+            <input type="range"
+                name="flags.tidy-doll-inventory.bagSlots.weightRatio" step="0.1"
+                min="0"
+                max="1"
+                value="{{flags.tidy-doll-inventory.bagSlots.weightRatio}}"/>
+            Weight ratio : {{flags.tidy-doll-inventory.bagSlots.weightRatio}}</label>
+    </div>
     {{/ifequal}}
-    {{#ifnotequal system.capacity.type "items"}}
-    <label>You have to set capacity type to "items" to unable doll inventory
-        config</label>
-    {{/ifnotequal}}
+    {{#ifequal flags.tidy-doll-inventory.bagSlots.containerType "pouch"}}
 
+    <div class="form-group stacked">
+        <label>coin pouch
+        </label>
+         <input type="range"
+                name="flags.tidy-doll-inventory.bagSlots.currencyWeightRatio" step="0.1"
+                min="0"
+                max="1"
+                value="{{flags.tidy-doll-inventory.bagSlots.currencyWeightRatio}}"/>
+            Weight ratio : {{flags.tidy-doll-inventory.bagSlots.currencyWeightRatio}}</label>
+        <ol class="currency">
+
+            <li class="currency-header" title="Currency">
+                <i class="fas fa-coins"></i>
+            </li>
+            <li class="currency-item pp" title="Platinum">
+                <input type="number" step="any"
+                    name="flags.bagSlots.currency.pp"
+                    value="{{flags.bagSlots.currency.pp}}">
+                <label class="denomination pp"
+                    data-denom="pp">pp</label>
+            </li>
+            <li class="currency-item gp" title="Gold">
+                <input type="number" step="any"
+                    name="flags.bagSlots.currency.gp"
+                    value="{{flags.bagSlots.currency.gp}}"> <label
+                    class="denomination gp"
+                    data-denom="gp">gp</label>
+            </li>
+            <li class="currency-item ep" title="Electrum">
+                <input type="number" step="any"
+                    name="flags.bagSlots.currency.ep"
+                    value="{{flags.bagSlots.currency.ep}}"> <label
+                    class="denomination ep"
+                    data-denom="ep">ep</label>
+            </li>
+            <li class="currency-item sp" title="Silver">
+                <input type="number" step="any"
+                    name="flags.bagSlots.currency.sp"
+                    value="{{flags.bagSlots.currency.sp}}"> <label
+                    class="denomination sp"
+                    data-denom="sp">sp</label>
+            </li>
+            <li class="currency-item cp" title="Copper">
+                <input type="number" step="any"
+                    name="flags.bagSlots.currency.cp"
+                    value="{{flags.bagSlots.currency.cp}}"> <label
+                    class="denomination cp"
+                    data-denom="cp">cp</label>
+            </li>
+
+        </ol>
+
+    </div>
+    {{/ifequal}}
 </div>

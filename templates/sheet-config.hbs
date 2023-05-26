@@ -1,9 +1,9 @@
 {{log this}}
-<div class="sheet-config-tab">
+<div class="sheet-config-tab dnd5e">
 
-    <h2>Sheet Config</h2>
+    <h3 class="form-header">Sheet Config</h3>
     <div class="form-group">
-        <label>Inventory Background</label>
+        <label>Inventory background image</label>
         <img src="{{dollInventory.background}}" class="img-edit"
             data-sheet-attr="dollInventory.background" alt="doll inventory
             background">
@@ -18,7 +18,7 @@
         <input type="color" data-color="dollInventory.secondaryColor"
             value="{{dollInventory.secondaryColor}}"/>
     </div>
-    <h2>Inventory location config</h2>
+    <h3 class="form-header">Inventory slots config</h3>
     {{#each dollInventory.location as |location id|}}
     <div class="form-group">
         <h3>for key : {{id}} as {{location.label}}</h3>
