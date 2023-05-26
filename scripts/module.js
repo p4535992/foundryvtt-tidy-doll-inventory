@@ -164,6 +164,3 @@ Hooks.on('item-piles-dropItem', async function (sourceActor, tokenSource, itemLi
 
 });
 
-Hooks.on('item-piles-createItemPile', async function (...args) {
-    console.log(...args)
-})
