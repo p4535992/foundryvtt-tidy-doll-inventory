@@ -572,78 +572,92 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                     }
                 }
 
-                ul.bag-item-list {
-                    padding: 10px 3px;
-                    display: grid;
-                    grid-template-columns: repeat(6, 1fr);
-                    grid-gap: 2px;
+                li.item.bag {
+                    h4.bag-name {
+                        width: 100%;
 
-                    .bagSlot {
-                        padding: 0.1rem;
-                        position: relative;
-                        border: 2px solid gray;
-                        font-size: x-small;
-                        border-radius: 10px;
-                        background-color: rgb(128, 128, 128);
-                        background-size: cover;
-                        background-position: center;
-                        transition: 0.2s;
-                        transition-delay: 0.3s;
-                        min-width: 3rem;
-                        min-height: 3rem;
+                        .clear-bag-slot {
+                            transition: 0.2s;
+                            pointer-events: none;
+                            opacity: 0;
 
-                        li {
-                            list-style: none;
+                            &.visible {
+                                opacity: 1;
+                                pointer-events: all;
+                            }
                         }
 
+                    }
 
-                        &:hover {
+                    ul.bag-item-list {
+                        padding: 10px 3px;
+                        display: grid;
+                        grid-template-columns: repeat(6, 1fr);
+                        grid-gap: 2px;
 
-                            z-index: +1;
+                        .bagSlot {
+                            padding: 0.1rem;
+                            position: relative;
+                            border: 2px solid gray;
+                            font-size: x-small;
+                            border-radius: 10px;
+                            background-color: rgb(128, 128, 128);
+                            background-size: cover;
+                            background-position: center;
+                            transition: 0.2s;
+                            transition-delay: 0.3s;
+                            min-width: 3rem;
+                            min-height: 3rem;
 
-
-                        }
-
-
-
-
-
-                        .item-name {
-                            position: absolute;
-                            opacity: 1;
-                            color: white;
-                            text-align: center;
-
-                            div.item-image {
-                                opacity: 0;
-                                max-width: 50%;
-                                transition: 0.2s;
+                            li {
+                                list-style: none;
                             }
 
-                            h3 {
-                                font-size: 0.8rem
-                            }
 
                             &:hover {
 
+                                z-index: +1;
+                            }
 
-                                .item-image {
-                                    opacity: 0.7;
 
-                                    i {
-                                        font-size: 2rem;
-                                        cursor: pointer;
-                                    }
+                            .item-name {
+                                position: absolute;
+                                opacity: 1;
+                                color: white;
+                                text-align: center;
+
+                                div.item-image {
+                                    opacity: 0;
+                                    max-width: 50%;
+                                    transition: 0.2s;
                                 }
 
                                 h3 {
-                                    display: none
+                                    font-size: 0.8rem
                                 }
-                            }
 
+                                &:hover {
+
+
+                                    .item-image {
+                                        opacity: 0.7;
+
+                                        i {
+                                            font-size: 2rem;
+                                            cursor: pointer;
+                                        }
+                                    }
+
+                                    h3 {
+                                        display: none
+                                    }
+                                }
+
+                            }
                         }
                     }
                 }
+
             }
 
 

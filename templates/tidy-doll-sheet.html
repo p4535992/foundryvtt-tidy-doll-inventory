@@ -638,7 +638,12 @@
                                         {{#if bag.system.equipped}}
                                         <li class="item bag"
                                             data-item-id="{{bag._id}}">
-                                            <h4>{{bag.name}}</h4>
+                                            <h4 class="bag-name flexrow">
+                                                {{bag.name}}
+                                                <div class="clear-bag-slot">
+                                                    <i class="fas fa-trash"></i>
+                                                </div>
+                                            </h4>
                                             <ul class=" item-list
                                                 bag-item-list">
                                                 {{#each
@@ -646,17 +651,20 @@
                                                 as |item itId|}}
 
                                                 {{#if item}}
+                                                {{log item}}
                                                 <li
                                                     class="bag-item item
                                                     bagSlot"
                                                     data-slot-index="{{itId}}"
-                                                    data-item-id="{{item.itemId}}"
+                                                    data-item-id="{{item._id}}"
                                                     {{#if item.img}}
                                                     style="background-image:url(
-                                                    {{item.img}})"
+                                                    {{item.img}})
+                                                    {{#if
+                                                    items.flags.tidy-doll-inventory.equippedSlot}}
+                                                    {{/if}}"
                                                     {{/if}}>
-                                                    <div class="item-name
-                                                        {{@root.rollableClass}}">
+                                                    <div class="item-name">
                                                         <div class="item-image">
                                                             <i class="fa-solid
                                                                 fa-check-to-slot"></i>

@@ -22,6 +22,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
                 { dragSelector: ".item-list .item", dropSelector: null },
                 { dragSelector: ".item-list .item", dropSelector: "li.bagSlot" },
                 { dragSelector: ".doll-location .item", dropSelector: "div.clear-slot" },
+                { dragSelector: ".bag .bag-item", dropSelector: "div.clear-bag-slot" },
 
 
 
@@ -64,7 +65,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
         let itemList = this.actor.items.filter(it => it.flags["tidy-doll-inventory"]?.equippedSlot);
         for (let loc in this.dollInventory.location) {
             console.log(loc)
-            this.dollInventory.location[loc].item = await this.actor.items.find(it => it.flags['tidy-doll-inventory'].equippedSlot == loc) || null
+            this.dollInventory.location[loc].item = await this.actor.items.find(it => it.flags['tidy-doll-inventory']?.equippedSlot == loc) || null
         };
 
     }
@@ -94,7 +95,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
         html.find("div.inventory-toggle").click(this.displayFullInventory.bind(this))
         html.find("nav.tabs a.item").click(this.colorTabs.bind(this))
         html.find(".doll-switch").click(this._onSwitchStow.bind(this));
-        html.find(".bag-item-list .bagSlot .item-image i").click(this._onReadyItem.bind(this))
+        html.find(".bag-item .item-image").click(event => this._onReadyItem(event));
 
         let configInputs = html.find("input[data-sheet-config]");
         for (let inp of configInputs) {
@@ -159,11 +160,13 @@ export default class DollInventorySheet extends Tidy5eSheet {
 
     async _onDragStart(event) {
         if (event.currentTarget.classList.contains("location-item")) {
-            let itemId = event.currentTarget.dataset.itemId;
-            let item = await this.actor.items.get(itemId);
-
             this.element.find('.clear-slot')[0].classList.add('visible');
-            console.log(item)
+        }
+        if (event.currentTarget.classList.contains("bag-item")) {
+
+            let bagEl = event.currentTarget.closest("li.bag");
+            let clearTarget = bagEl.querySelector(".clear-bag-slot");
+            clearTarget.classList.toggle("visible")
         }
         super._onDragStart(event)
     }
@@ -190,6 +193,9 @@ export default class DollInventorySheet extends Tidy5eSheet {
         else if (event.currentTarget?.classList.contains("clear-slot")) {
             this.clearInventoryLocation(dropItem)
         }
+        else if (event.currentTarget?.classList.contains("clear-bag-slot")) {
+            this.clearBagSlot(dropItem);
+        }
         else {
 
             super._onDrop(event);
@@ -205,27 +211,39 @@ export default class DollInventorySheet extends Tidy5eSheet {
         let index = ev.currentTarget.dataset.slotIndex;
 
         //flagging dropped item with the bag id
-        await dropItem.setFlag("tidy-doll-inventory", "bagContainer",
-            {
-                bagId: targetBag.id,
-                bagIndex: index
-            })
 
-        //flagging the bag with the dropped item
-        let flag = await targetBag.getFlag("tidy-doll-inventory", "bagSlots");
-        let it = foundry.utils.duplicate(dropItem);
-        it.itemId = dropItem.id;
+        let bagFlag = targetBag.flags["tidy-doll-inventory"].bagSlots;
+        let duplicated = bagFlag.innerItems.find(it => it?._id == dropItem.id)
+        if (duplicated) {
+            bagFlag.innerItems[bagFlag.innerItems.indexOf(duplicated)] = null
 
-        flag.innerItems[index] = it;
+        }
+        bagFlag.innerItems[index] = foundry.utils.duplicate(dropItem);;
+        await targetBag.setFlag("tidy-doll-inventory", "bagSlots", bagFlag)
 
-        await targetBag.setFlag("tidy-doll-inventory", "bagSlots", flag);
-        this.persistConfig()
-
+        await dropItem.setFlag("tidy-doll-inventory", "bagContainer", {
+            bagId: targetBag.id,
+            bagIndex: index
+        });
+        if (dropItem.flags["tidy-doll-inventory"].equippedSlot) { dropItem.unsetFlag("tidy-doll-inventory", "equippedSlot") }
 
     }
     async _onReadyItem(ev) {
-        console.log(this.dollInventory)
-        let nextEmptyReady;
+        let readys = ["ready1", "ready2", "ready3", "ready4"]
+        let nextEmptyReady = "";
+        let itemId = ev.currentTarget.closest('li.item').dataset.itemId
+        let item = await this.actor.items.get(itemId)
+        console.log(this.dollInventory.location);
+        for (let i = 0; i < readys.length; i++) {
+            if (this.dollInventory.location[readys[i]].item == null) {
+                nextEmptyReady = readys[i];
+                break
+
+            }
+
+        }
+        if (nextEmptyReady == "") { return ui.notifications.warn("no more empty ready slot") }
+        else { return this.equipSlot(item, nextEmptyReady) }
     }
     async _onDropDollLocation(event, data) {
         let dropItem = await Item.implementation.fromDropData(data);
@@ -341,13 +359,12 @@ export default class DollInventorySheet extends Tidy5eSheet {
         let bagSlots = bag.flags["tidy-doll-inventory"].bagSlots;
         bagSlots.innerItems[index] = null;
 
-        bag.flags["tidy-doll-inventory"].bagSlots = bagSlots;
-        item.flags["tidy-doll-inventory"].bagContainer = null;
 
-        await this.actor.updateEmbeddedDocuments("Item", [bag, item])
+        await item.unsetFlag("tidy-doll-inventory", "bagContainer");
+        await bag.setFlag("tidy-doll-inventory", "bagSlots", bagSlots);
     }
     async equipSlot(item, slot) {
-        let actualItem = this.actor.items.find(it => it.flags["tidy-doll-inventory"].equippedSlot == slot)
+        let actualItem = this.actor.items.find(it => it.flags["tidy-doll-inventory"]?.equippedSlot == slot)
         if (actualItem && (actualItem.id != item.id)) {
             await this.clearInventoryLocation(actualItem)
         }
