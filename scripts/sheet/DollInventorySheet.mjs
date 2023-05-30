@@ -4,6 +4,7 @@ import { dollConfig } from '../config.js';
 export default class DollInventorySheet extends Tidy5eSheet {
     constructor(...args) {
         super(...args);
+        this.filters = [];
         this.initInventory();
     }
     get template() {
@@ -53,7 +54,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
         await this.filterDollItems();
         context.dollInventory = this.dollInventory;
         context.dollInventory.bags = await this.initDollInventoryBags()
-
+        this.prepareItemList(context);
         return context
     }
 
@@ -69,7 +70,15 @@ export default class DollInventorySheet extends Tidy5eSheet {
             this.dollInventory.location[loc].item = it || null;
 
         };
+    };
+    prepareItemList(context) {
+        let filters = this.dollListFilters;
 
+        context.dollItemList = context.inventory;
+        console.log(context);
+        for (let section in context.dollItemList) {
+            console.log(section)
+        }
     }
 
     async activateListeners(html) {

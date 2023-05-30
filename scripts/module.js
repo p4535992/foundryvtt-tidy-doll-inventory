@@ -4,6 +4,7 @@
 
 import DollInventorySheet from "./sheet/DollInventorySheet.mjs";
 import { dollConfig } from "./config.js";
+import { preloadDollInventoryTemplates } from "./preloadTemplates.js";
 
 Hooks.once('init', async function () {
     CONFIG.debug.hooks = true;
@@ -31,7 +32,7 @@ Hooks.once('init', async function () {
         type: Boolean,
         default: false,
     });
-
+    preloadDollInventoryTemplates()
 
     //handelbar helpers
 

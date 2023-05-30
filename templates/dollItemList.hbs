@@ -1,0 +1,29 @@
+
+{{#each dollItemList as |section id|}}
+<ul class="inventory-list items-list">
+    <li class="items-header">
+        <h3>
+            {{localize section.label}}
+        </h3>
+        <div class="control-collapse" data-collapse="{{section.collapsed}}">
+            <i class="fa-solid fa-chevrons-up"></i>
+        </div>
+    </li>
+    <ul class="item-list">
+        {{#each section.items as |item index|}}
+        <li class="item" data-item-id="{{item._id}}">
+            <div class="item-name">
+
+                <div class="item-image"
+                    style="background-image:url('{{item.img}}')">
+                </div>
+                <h4>{{item.name}}</h4>
+            </div>
+            {{>"modules/tidy-doll-inventory/templates/itemCard.hbs"item=item}}
+
+        </li>
+        {{/each}}
+    </ul>
+</ul>
+
+{{/each}}

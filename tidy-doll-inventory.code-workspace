@@ -13,6 +13,18 @@
 		},
 		{
 			"path": "../item-piles"
+		},
+		{
+			"path": "../../../../../../../../Program Files/Foundry Virtual Tabletop_V11"
+		},
+		{
+			"path": "../../systems/noc"
+		},
+		{
+			"path": "../role-n-play"
+		},
+		{
+			"path": "../role-n-play_Boite_initiation"
 		}
 	],
 	"settings": {

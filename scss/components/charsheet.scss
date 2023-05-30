@@ -125,33 +125,14 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
             }
 
             .tidy-tools {
-                box-shadow: -3px 0px 5px black;
-                transition: 0.2s;
-                flex: 1;
+                li.item {
+                    width: 100%;
 
-                .tidy5e-sheet {
-                    overflow: visible;
+                    div.item-name {
+                        width: 100%;
+
+                    }
                 }
-
-                .items-header-labels,
-                .item-detail {
-                    display: none
-                }
-
-                .tidy-sheet:hover {
-                    overflow: visible;
-                }
-
-                ul.inventory-list:hover {
-                    z-index: +1;
-                    overflow: visible;
-                }
-
-
-
-
-
-
             }
 
             .tidy-doll {
@@ -166,15 +147,14 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                 }
 
                 padding: 1rem;
-                padding-top: 1rem;
+                padding-top: 5%;
                 display: grid;
-                grid-template-rows: repeat(8, minmax(1.5rem, 3rem));
+                grid-template-rows: repeat(8, 1fr);
                 grid-template-columns: repeat(6, 1fr);
                 background-size: cover;
                 background-position: center;
                 gap: 3px;
-                max-width: 90%;
-                min-height: 90%;
+
                 background-position: center;
                 overflow: visible;
 
