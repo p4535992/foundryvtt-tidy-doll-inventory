@@ -162,5 +162,20 @@ Hooks.on('item-piles-dropItem', async function (sourceActor, tokenSource, itemLi
 
     })
 
-});
+})
+Hooks.on("dnd5e.getItemContextOptions", async function (item, contextOptions) {
 
+    if (item.flags["tidy-doll-inventory"]?.equippedSlot || item.flags["tidy-doll-inventory"]?.bagSlot) {
+        setTimeout(
+            () => {
+                let equipIcon = document.body.querySelectorAll("#context-menu li i.fa-user-alt");
+                if (equipIcon) {
+                    equipIcon[0].parentNode.remove()
+                }
+            }
+
+            , 80// time to tidysheet for changing context menu
+        )
+    }
+
+})
