@@ -154,6 +154,12 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
 
             }
 
+            .tidy-doll {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+
             .inventory-doll {
                 &:hover {
                     z-index: +1;
@@ -168,7 +174,7 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                 background-position: center;
                 gap: 3px;
                 max-width: 90%;
-                max-height: min-content;
+                min-height: 90%;
                 background-position: center;
                 overflow: visible;
 
@@ -250,8 +256,8 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                     background-position: center;
                     transition: 0.2s;
                     transition-delay: 0.3s;
-                    min-width: 2rem;
-                    min-height: 2rem;
+                    height: 100%;
+                    aspect-ratio: 1/1;
 
                     li {
                         list-style: none;
