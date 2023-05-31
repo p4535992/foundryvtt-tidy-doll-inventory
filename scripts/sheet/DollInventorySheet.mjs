@@ -43,11 +43,11 @@ export default class DollInventorySheet extends Tidy5eSheet {
                 collapsedSections: [],
                 itemListFilters: {
                     fav: {
-                        label: "only favorite items",
+                        label: "only favorite",
                         value: false
                     },
                     unequipped: {
-                        label: "only unequipped items",
+                        label: "only unequipped",
                         value: true
                     },
                 }
@@ -139,6 +139,8 @@ export default class DollInventorySheet extends Tidy5eSheet {
         html.find(".doll-switch").click(this._onSwitchStow.bind(this));
         html.find(".bag-item .item-image").click(event => this._onReadyItem(event));
         html.find(".doll-list-filter").click(event => this.changeFilter(event));
+        html.find(".doll-list-filter").click(event => this.changeFilter(event));
+        html.find(".display-favorites").click(event => this.displayFav(event));
 
         html.find(".tidy-tools .inventory-list .control-collapse").click(ev => this._onClickCollapse(ev))
         let configInputs = html.find("input[data-sheet-config]");
@@ -296,6 +298,10 @@ export default class DollInventorySheet extends Tidy5eSheet {
         await this.persistConfig();
         console.log(this)
 
+    }
+    async displayFav(ev) {
+        this.dollInventory.displayFavorites = ev.currentTarget.checked ? true : false;
+        await this.persistConfig()
     }
     async _onReadyItem(ev) {
         let readys = ["ready1", "ready2", "ready3", "ready4"]

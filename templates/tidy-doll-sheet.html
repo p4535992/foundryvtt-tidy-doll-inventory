@@ -475,6 +475,16 @@
 
             <div class="tab attributes" data-group="primary"
                  data-tab="attributes">
+                    {{#if dollInventory.displayFavorites}}
+
+                <div class="tidy-specials">
+                    <div class="alt-trait-pos"></div>
+
+                    {{!-- Actions --}}
+                    <div class="actions-target list-layout"></div>
+                    <div class="favorites-target "></div>
+                   
+                </div> {{/if}}
 
                 <div class="left-pane" style=" background:
                         linear-gradient(to bottom,
@@ -585,7 +595,8 @@
                                 <i class="encumbrance-breakpoint encumbrance-66
                                 arrow-down"></i>
                             </div>
-                        {{/with}} {{/unless}}
+                        {{/with}}
+                    {{/unless}}
                     <div class="flexrow">
                         <div class="tidy-doll">
                             <div class="inventory-doll inventory-list"
@@ -657,15 +668,13 @@
                                                         {{#if item}}
                                                             <li
                                                                 class="bag-item item
-                                                    bagSlot"
+                                                                     bagSlot"
                                                                 data-slot-index="{{itId}}"
                                                                 data-item-id="{{item._id}}"
                                                                 {{#if item.img}}
                                                                 style="background-image:url(
-                                                    {{item.img}})
-                                                    {{#if
-                                                    items.flags.tidy-doll-inventory.equippedSlot}}
-                                                    {{/if}}"
+                                                                {{item.img}})
+                                                               "
                                                                 {{/if}}>
                                                                 <div class="item-name">
                                                                     <div class="item-image">
@@ -681,7 +690,7 @@
                                                             </li>
 
                                                         {{else}}
-                                                            <li class="item bagSlot"
+                                                            <li class=" bagSlot"
                                                                 data-slot-index="{{itId}}">empty</li>
                                                         {{/if}}
 
@@ -695,14 +704,11 @@
                             </div>
                         </div>
                         <div class="tidy-tools">
-                            <div class="favorites-target inventory-list"></div>
 
                             {{>"modules/tidy-doll-inventory/templates/dollItemList.hbs"}}
                             {{!-- Traits --}}
-                            <div class="alt-trait-pos"></div>
 
-                            {{!-- Actions --}}
-                            <div class="actions-target list-layout"></div>
+
 
                         </div>
                     </div>

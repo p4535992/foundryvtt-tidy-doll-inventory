@@ -78,6 +78,20 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
             width: 100%;
         }
 
+        .tidy-specials {
+            position: absolute;
+            right: -30%;
+            top: 50%;
+            overflow: auto;
+            width: 30%;
+            aspect-ratio: 1/2;
+            max-width: 300px;
+            background: url(../../../systems/dnd5e/ui/parchment.jpg) repeat;
+            box-shadow: 0px 0px 20px black;
+            border-radius: 15px;
+
+        }
+
 
         .left-pane {
             justify-content: center;
@@ -128,27 +142,18 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                 flex: 0.2;
                 min-width: 40%;
 
-                .favorites-target {
-                    li.item {
-                        &>*:not(.item-name) {
-                            display: none
-                        }
 
-                        span {
-                            display: none !important;
-                        }
-                    }
 
-                    li.items-header {
 
-                        .items-header-labels {
-                            display: none
-                        }
-                    }
-                }
+
 
                 .doll-item-list-filters {
                     font-size: x-small;
+
+                    input[type="checkbox"] {
+                        width: 0.8rem !important;
+                        aspect-ratio: 1/1;
+                    }
 
                     h4 {
                         text-align: center
@@ -158,7 +163,7 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
 
                     .form-group {
                         justify-content: center;
-                        flex-direction: column;
+                        border-bottom: 1px solid gray;
                     }
                 }
 
@@ -755,13 +760,19 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                     max-width: 25%;
                     padding: 0px 5px;
                     margin: 0px;
-
                 }
 
                 font-size: smaller;
                 box-shadow:0px 5px 25px rgba(128, 128, 128, 0.298);
-                display: flex;
-                padding: 5px 25px;
+                padding: 0px 25px;
+                align-items: center;
+
+                h3 {
+                    background: var(--t5e-faint-color);
+                    min-height: 100%;
+                    padding: 20px 0%;
+                    text-align: center;
+                }
 
                 input[type="text"] {
                     border: 1px solid gray
