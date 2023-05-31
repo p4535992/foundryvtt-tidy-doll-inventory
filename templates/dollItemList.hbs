@@ -1,4 +1,18 @@
 
+<div class="doll-item-list-filters">
+    <h4 class="'filter-header">inventory filters</h4>
+    <div class="flexrow">
+        {{#each this.dollInventory.itemListFilters as |filter id| }}
+        <div class="form-group">
+            <label for="dollInventory.itemListFilters.{{id}}">{{id}}</label>
+            <input class="doll-list-filter" type="checkbox"
+                data-filter="{{id}}" value="1"
+                {{checked filter}}>
+        </div>
+        {{/each}}
+    </div>
+
+</div>
 {{#each dollItemList as |section id|}}
 <ul class="inventory-list items-list">
     <li class="items-header">
@@ -9,7 +23,7 @@
             <i class="fa-solid fa-chevrons-up"></i>
         </div>
     </li>
-    <ul class="item-list">
+    <ul class="item-list" data-section-id="{{id}}">
         {{#each section.items as |item index|}}
         <li class="item" data-item-id="{{item._id}}">
             <div class="item-name">

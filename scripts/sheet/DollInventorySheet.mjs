@@ -4,7 +4,8 @@ import { dollConfig } from '../config.js';
 export default class DollInventorySheet extends Tidy5eSheet {
     constructor(...args) {
         super(...args);
-        this.filters = [];
+
+
         this.initInventory();
     }
     get template() {
@@ -38,7 +39,14 @@ export default class DollInventorySheet extends Tidy5eSheet {
                 location: dollConfig.inventory,
                 background: this.actor.img,
                 primaryColor: "#FFFFFF",
-                secondaryColor: "#888888"
+                secondaryColor: "#888888",
+                collapsedSections: [],
+                itemListFilters: {
+                    equipped: false,
+                    fav: false,
+                    usable: false
+                }
+
             }
             this.actor.setFlag("tidy-doll-inventory", "sheetConfig", this.dollInventory)
 
@@ -75,9 +83,27 @@ export default class DollInventorySheet extends Tidy5eSheet {
         let filters = this.dollListFilters;
 
         context.dollItemList = context.inventory;
-        console.log(context);
         for (let section in context.dollItemList) {
-            console.log(section)
+            let itemList = context.dollItemList[section].items?.filter(i =>
+                (!i.flags["tidy-doll-inventory"]?.equippedSlot && !i.flags["tidy-doll-inventory"]?.bagContainer)
+            )
+
+            for (let filter in this.dollInventory.itemListFilters) {
+                if (this.dollInventory.itemListFilters[filter]) {
+                    switch (filter) {
+                        case "equipped":
+                            itemList = itemList?.filter(i => i.system.equipped);
+                            break;
+                        case "fav":
+                            itemList = itemList?.filter(i => i.flags["tidy5e-sheet"]?.favorite);
+                            break;
+                        default:
+                            break;
+
+                    }
+                }
+                context.dollItemList[section].items = itemList
+            }
         }
     }
 
@@ -107,7 +133,9 @@ export default class DollInventorySheet extends Tidy5eSheet {
         html.find("nav.tabs a.item").click(this.colorTabs.bind(this))
         html.find(".doll-switch").click(this._onSwitchStow.bind(this));
         html.find(".bag-item .item-image").click(event => this._onReadyItem(event));
+        html.find(".doll-list-filter").click(event => this.changeFilter(event));
 
+        html.find(".tidy-tools .inventory-list .control-collapse").click(ev => this._onClickCollapse(ev))
         let configInputs = html.find("input[data-sheet-config]");
         for (let inp of configInputs) {
             inp.addEventListener("change", (ev) => {
@@ -256,6 +284,13 @@ export default class DollInventorySheet extends Tidy5eSheet {
         });
         if (dropItem.flags["tidy-doll-inventory"].equippedSlot) { this.clearInventoryLocation(dropItem) }
 
+    };
+    async changeFilter(ev) {
+        let targetFilter = ev.currentTarget.dataset.filter;
+        this.dollInventory.itemListFilters[targetFilter] = ev.currentTarget.checked ? true : false;
+        await this.persistConfig();
+        console.log(this)
+
     }
     async _onReadyItem(ev) {
         let readys = ["ready1", "ready2", "ready3", "ready4"]
@@ -345,6 +380,12 @@ export default class DollInventorySheet extends Tidy5eSheet {
     async persistConfig() {
         this.actor.setFlag("tidy-doll-inventory", "sheetConfig", this.dollInventory);
 
+    }
+    _onClickCollapse(ev) {
+        let inventory = ev.currentTarget.closest('.inventory-list');
+        let itemList = inventory.querySelector('ul.item-list');
+        itemList.classList.toggle("collapsed");
+        ev.currentTarget.classList.toggle("collapsed")
     }
     async displayFullInventory(ev) {
 
@@ -448,6 +489,8 @@ export default class DollInventorySheet extends Tidy5eSheet {
         stowmainEl.classList.add("twoHands");
         let switchmain = this.element.find("[data-hand='main']")[0];
         switchmain.classList.add("twoHands");
+
+        this.clearInventoryLocation(this.dollInventory.location.offHand.item)
 
     }
     async _onSwitchStow(ev) {

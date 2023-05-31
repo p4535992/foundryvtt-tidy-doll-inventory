@@ -125,6 +125,59 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
             }
 
             .tidy-tools {
+                flex: 0.2;
+
+                .doll-item-list-filters {
+                    font-size: smaller;
+
+                    h4 {
+                        text-align: center
+                    }
+
+                    ;
+
+                    .form-group {
+                        justify-content: center;
+                        flex-direction: column;
+                    }
+                }
+
+                ul.inventory-list {
+                    transition: 0.2s;
+
+                    &:hover,
+                    &:active {
+                        z-index: +1;
+                        overflow: visible;
+                    }
+
+                    .control-collapse {
+                        transition: 0.2s;
+
+                        &.collapsed {
+                            transform: rotate(180deg);
+                            color: rgba(255, 1, 1, 0.757);
+                            text-shadow: 0px 0px 3px black
+                        }
+                    }
+
+                    ul.item-list {
+                        transition: all 0.3s;
+
+                        &.collapsed {
+                            background-color: rgba(255, 0, 0, 0.207);
+                            overflow: hidden;
+                            max-height: 1px;
+                            opacity: 0;
+                            pointer-events: none;
+                        }
+
+                        li.item .item-image {
+                            cursor: unset
+                        }
+                    }
+                }
+
                 li.item {
                     width: 100%;
 
@@ -138,7 +191,7 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
             .tidy-doll {
                 display: flex;
                 flex-direction: column;
-                justify-content: center;
+                justify-content: start;
             }
 
             .inventory-doll {
@@ -151,7 +204,8 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                 display: grid;
                 grid-template-rows: repeat(8, 1fr);
                 grid-template-columns: repeat(6, 1fr);
-                background-size: cover;
+                background-size: 90% auto;
+                background-repeat: no-repeat;
                 background-position: center;
                 gap: 3px;
 
@@ -186,14 +240,13 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                 .doll-switch[data-hand="main"] {
                     grid-row: 6/7;
                     grid-column: 3/4;
-                    z-index: +1;
                     color: white;
                     position: relative;
 
                     i {
                         position: absolute;
                         bottom: 35%;
-                        right: 20%;
+                        right: 0%;
                         font-size: 20px;
                         text-shadow: 0px 0px 10px red
                     }
@@ -206,7 +259,6 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                 .doll-switch[data-hand="off"] {
                     grid-row: 6/7;
                     grid-column: 4/5;
-                    z-index: +1;
                     color: white;
                     position: relative;
 
@@ -217,7 +269,7 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                     i {
                         position: absolute;
                         bottom: 35%;
-                        left: 25%;
+                        left: 0%;
                         font-size: 20px;
                         text-shadow: 0px 0px 10px red
                     }
