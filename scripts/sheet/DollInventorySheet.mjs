@@ -42,9 +42,14 @@ export default class DollInventorySheet extends Tidy5eSheet {
                 secondaryColor: "#888888",
                 collapsedSections: [],
                 itemListFilters: {
-                    equipped: false,
-                    fav: false,
-                    usable: false
+                    fav: {
+                        label: "only favorite items",
+                        value: false
+                    },
+                    unequipped: {
+                        label: "only unequipped items",
+                        value: true
+                    },
                 }
 
             }
@@ -89,10 +94,10 @@ export default class DollInventorySheet extends Tidy5eSheet {
             )
 
             for (let filter in this.dollInventory.itemListFilters) {
-                if (this.dollInventory.itemListFilters[filter]) {
+                if (this.dollInventory.itemListFilters[filter].value) {
                     switch (filter) {
-                        case "equipped":
-                            itemList = itemList?.filter(i => i.system.equipped);
+                        case "unequipped":
+                            itemList = itemList?.filter(i => !i.system.equipped);
                             break;
                         case "fav":
                             itemList = itemList?.filter(i => i.flags["tidy5e-sheet"]?.favorite);
@@ -287,7 +292,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
     };
     async changeFilter(ev) {
         let targetFilter = ev.currentTarget.dataset.filter;
-        this.dollInventory.itemListFilters[targetFilter] = ev.currentTarget.checked ? true : false;
+        this.dollInventory.itemListFilters[targetFilter].value = ev.currentTarget.checked ? true : false;
         await this.persistConfig();
         console.log(this)
 

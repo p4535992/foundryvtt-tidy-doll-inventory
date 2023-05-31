@@ -1,19 +1,19 @@
 
 <div class="doll-item-list-filters">
-    <h4 class="'filter-header">inventory filters</h4>
     <div class="flexrow">
         {{#each this.dollInventory.itemListFilters as |filter id| }}
-        <div class="form-group">
-            <label for="dollInventory.itemListFilters.{{id}}">{{id}}</label>
+        <div class="form-group flexrow">
+            <label for="dollInventory.itemListFilters.{{id}}">{{filter.label}}</label>
             <input class="doll-list-filter" type="checkbox"
                 data-filter="{{id}}" value="1"
-                {{checked filter}}>
+                {{checked filter.value}}>
         </div>
         {{/each}}
     </div>
 
 </div>
 {{#each dollItemList as |section id|}}
+{{#if section.items}}
 <ul class="inventory-list items-list">
     <li class="items-header">
         <h3>
@@ -25,13 +25,20 @@
     </li>
     <ul class="item-list" data-section-id="{{id}}">
         {{#each section.items as |item index|}}
-        <li class="item" data-item-id="{{item._id}}">
+        <li class="item
+        {{#if item.flags.tidy5e-sheet.favorite}}
+        isFav
+        {{/if}}
+        {{#if item.system.equipped}}
+        equipped
+        {{/if}}
+        " data-item-id="{{item._id}}">
             <div class="item-name">
 
                 <div class="item-image"
                     style="background-image:url('{{item.img}}')">
                 </div>
-                <h4>{{item.name}}</h4>
+                <h4>{{item.name}} <span class="item-quantity">qt({{item.system.quantity}})</span></h4>
             </div>
             {{>"modules/tidy-doll-inventory/templates/itemCard.hbs"item=item}}
 
@@ -39,5 +46,5 @@
         {{/each}}
     </ul>
 </ul>
-
+{{/if}}
 {{/each}}

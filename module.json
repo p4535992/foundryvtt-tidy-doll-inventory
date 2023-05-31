@@ -18,8 +18,35 @@
     }
   ],
   "relationships": {
-    "systems": [],
-    "requires": []
+    "systems": [
+      {
+        "id": "dnd5e",
+        "type": "system",
+        "manifest": "https://raw.githubusercontent.com/foundryvtt/dnd5e/v10-dev/system.json",
+        "compatibility": {
+          "minimum": "2.0.0-alpha1",
+          "verified": "2.1.5"
+        }
+      }
+    ],
+    "requires": [
+      {
+        "id": "item-piles",
+        "compatibility": {
+          "minimum": "2.6.13",
+          "verified": "2.6.13"
+        },
+        "type": "module"
+      },
+      {
+        "id": "tidy5e-sheet",
+        "compatibility": {
+          "minimum": "0.8.27",
+          "verified": "0.8.27"
+        },
+        "type": "module"
+      }
+    ]
   },
   "esmodules": [
     "scripts/module.js"
@@ -38,11 +65,5 @@
   "manifest": "This is auto replaced",
   "download": "This is auto replaced",
   "license": "LICENSE",
-  "readme": "README.md",
-  "media": [
-    {
-      "type": "icon",
-      "url": "https://avatars2.githubusercontent.com/u/71292812?s=400&u=ccdb4eeb7abf551ca8f314e5a9bfd0479a4d3d41&v=4"
-    }
-  ]
+  "readme": "README.md"
 }
