@@ -34,7 +34,7 @@
         "id": "item-piles",
         "compatibility": {
           "minimum": "2.6.13",
-          "verified": "2.6.13"
+          "verified": "2.6.14"
         },
         "type": "module"
       },
@@ -42,7 +42,7 @@
         "id": "tidy5e-sheet",
         "compatibility": {
           "minimum": "0.8.27",
-          "verified": "0.8.27"
+          "verified": "0.8.41"
         },
         "type": "module"
       }

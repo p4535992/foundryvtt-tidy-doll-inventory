@@ -24,7 +24,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
                 { dragSelector: ".item-list .item", dropSelector: null },
                 { dragSelector: ".item-list .item", dropSelector: "li.bagSlot" },
                 { dragSelector: ".doll-location .item", dropSelector: "div.clear-slot" },
-                { dragSelector: ".bag .bag-item", dropSelector: "div.clear-bag-slot" },
+                { dragSelector: ".bag .bag-item", dropSelector: "div.clear-bag-slot" }
             ]
 
         });
@@ -35,6 +35,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
         let config = await this.actor.getFlag("tidy-doll-inventory", "sheetConfig")
         if (!config) {
             this.dollInventory = {
+                displayComputedEncumbrance: true,
                 displayInventory: false,
                 location: dollConfig.inventory,
                 background: this.actor.img,
@@ -51,7 +52,6 @@ export default class DollInventorySheet extends Tidy5eSheet {
                         value: true
                     },
                 }
-
             }
             this.actor.setFlag("tidy-doll-inventory", "sheetConfig", this.dollInventory)
 
@@ -68,6 +68,9 @@ export default class DollInventorySheet extends Tidy5eSheet {
         context.dollInventory = this.dollInventory;
         context.dollInventory.bags = await this.initDollInventoryBags()
         this.prepareItemList(context);
+        this.resumeCurrency(context);
+        await this.computeItemsWeight(context);
+
         return context
     }
 
@@ -84,20 +87,85 @@ export default class DollInventorySheet extends Tidy5eSheet {
 
         };
     };
+    resumeCurrency(context) {
+        let pouchList = this.actor.items.filter(i => i.flags["tidy-doll-inventory"]?.bagSlots?.containerType == "pouch");
+        console.log(pouchList)
+        context.dollInventory.currency = {};
+        let details = {};
+
+        details[`Actor.${this.actor._id}`] = {
+            sectionName: this.actor.name,
+            currency: this.actor.system.currency
+        }
+        for (let pouch of pouchList) {
+            details[`Actor.${this.actor._id}.Item.${pouch._id}`] = {
+                sectionName: pouch.name,
+                currency: pouch.flags["tidy-doll-inventory"]?.bagSlots?.currency
+            }
+        }
+        this.dollInventory.currency.details = details;
+        console.log(context.dollInventory.currency)
+
+    }
+    async computeItemsWeight(context) {
+        // weight of items
+        let itemsWeight = 0
+        for (let item of context.actor.items) {
+            let selfWeight = (item.system.weight || 0) * (item.system.quantity || 1);
+            if (item.flags["tidy-doll-inventory"]?.bagContainer) {
+                let bag = await this.actor.items.get(item.flags["tidy-doll-inventory"]?.bagContainer.bagId);
+                if (bag) {
+                    if (bag.system.capacity.weightless) {
+                        selfWeight = 0;
+                    } else {
+                        let ratio = bag.flags["tidy-doll-inventory"]?.bagSlots?.weightRatio;
+                        selfWeight = Math.round((selfWeight * ratio) * 100) / 100;
+                    }
+                }
+            }
+            itemsWeight += selfWeight;
+        };
+        // weight of currency
+        let actorCoinsWeight = 0;
+        let pouchCoinWeight = 0;
+
+        const currency = this.actor.system.currency;
+        if (game.settings.get("dnd5e", "currencyWeight") && currency) {
+            const numCoins = Object.values(currency).reduce((val, denom) => val + Math.max(denom, 0), 0);
+            const currencyPerWeight = game.settings.get("dnd5e", "metricWeightUnits")
+                ? CONFIG.DND5E.encumbrance.currencyPerWeight.metric
+                : CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
+            actorCoinsWeight += numCoins / currencyPerWeight;
+            actorCoinsWeight = Math.round(actorCoinsWeight * 100) / 100;
+
+            for (let pouch of this.actor.items.filter(i => i.flags["tidy-doll-inventory"]?.bagSlots?.containerType == "pouch")) {
+                console.log(pouch);
+                const numCoins = Object.values(pouch.flags["tidy-doll-inventory"]?.bagSlots?.currency).reduce((val, denom) => val + Math.max(denom, 0), 0);
+                const currencyPerWeight = game.settings.get("dnd5e", "metricWeightUnits")
+                    ? CONFIG.DND5E.encumbrance.currencyPerWeight.metric
+                    : CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
+                pouchCoinWeight += (numCoins / currencyPerWeight) * (pouch.flags["tidy-doll-inventory"].bagSlots.currencyWeightRatio || 1);
+                pouchCoinWeight = Math.round(pouchCoinWeight * 100) / 100;
+            }
+
+        }
+
+        context.encumbrance.value = Math.round((itemsWeight + actorCoinsWeight + pouchCoinWeight) * 100) / 100;
+        context.encumbrance.pct = Math.round((context.encumbrance.value / context.encumbrance.max) * 100);
+        context.encumbrance.encumbred = (context.encumbrance.pct >= 66)
+    }
     prepareItemList(context) {
         let filters = this.dollListFilters;
 
         context.dollItemList = context.inventory;
         for (let section in context.dollItemList) {
-            let itemList = context.dollItemList[section].items?.filter(i =>
-                (!i.flags["tidy-doll-inventory"]?.equippedSlot && !i.flags["tidy-doll-inventory"]?.bagContainer)
-            )
+            let itemList = context.dollItemList[section].items
 
             for (let filter in this.dollInventory.itemListFilters) {
                 if (this.dollInventory.itemListFilters[filter].value) {
                     switch (filter) {
                         case "unequipped":
-                            itemList = itemList?.filter(i => !i.system.equipped);
+                            itemList = itemList?.filter(i => !i.flags["tidy-doll-inventory"]?.equippedSlot && !i.flags["tidy-doll-inventory"]?.bagContainer);
                             break;
                         case "fav":
                             itemList = itemList?.filter(i => i.flags["tidy5e-sheet"]?.favorite);
@@ -122,7 +190,9 @@ export default class DollInventorySheet extends Tidy5eSheet {
             <i class="fa-solid fa-spinner fa-spin"></i>
             </div>
             `)
-            this.initItemsFlags(html);
+            await this.initItemsFlags(html);
+            html.find('div.waiting').remove()
+
         }
         if (this.dollInventory.location.mainHand.item?.system.properties?.two) {
             this.disableOffHand()
@@ -168,8 +238,6 @@ export default class DollInventorySheet extends Tidy5eSheet {
             );
 
         });
-        html.find('div.waiting').remove()
-
     }
     async initDollInventoryBags() {
         let dollBags = [];
@@ -178,6 +246,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
             let flag = {};
             if (!bag.flags["tidy-doll-inventory"]?.bagSlots) {
                 flag = {
+                    displayComputedEncumbrance: true,
                     weightRatio: 1,
                     currencyWeightRatio: 1,
                     containerType: "none",
@@ -188,7 +257,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
                     },
                     currency: {
                         pp: 0,
-                        gp: 10,
+                        gp: 0,
                         ep: 0,
                         sp: 0,
                         cp: 0
@@ -207,6 +276,11 @@ export default class DollInventorySheet extends Tidy5eSheet {
                 flag.innerItems[i] = flag.innerItems[i];
                 if (i == bag.system.capacity.value - 1) {
                     flag.innerItems.splice(i + 1, flag.innerItems.length + 1 - bag.system.capacity.value)
+                }
+            }
+            for (let i = 0; i < flag.innerItems.length; i++) {
+                if (flag.innerItems[i] && !await this.actor.items.get(flag.innerItems[i]._id)) {
+                    flag.innerItems[i] = null
                 }
             }
 
@@ -257,11 +331,13 @@ export default class DollInventorySheet extends Tidy5eSheet {
         else if (event.currentTarget?.classList.contains("clear-bag-slot")) {
             this.clearBagSlot(dropItem);
         }
+
         else {
-
-            super._onDrop(event);
-
+            return super._onDrop(event);
         }
+
+
+
 
 
     }
@@ -337,6 +413,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
         }
         // if location not allowed by item's flags
         if (!availableLocations) {
+            dropItem.sheet.render(true)
             return ui.notifications.warn("This item hasn't been configure for the tidy doll inventory yet");
         }
         // if location allowed 
@@ -448,7 +525,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
             this.clearInventoryLocation(this.dollInventory.location[slot].item)
 
         }
-        if (item.flags["tidy-doll-inventory"].bagContainer) {
+        if (item.flags["tidy-doll-inventory"]?.bagContainer) {
             this.clearBagSlot(item)
         }
         await item.update({

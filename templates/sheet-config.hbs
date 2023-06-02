@@ -10,12 +10,19 @@
     <div class="form-group">
         <label>Primary Color</label>
         <input type="color" data-color="dollInventory.primaryColor"
-            value="{{dollInventory.primaryColor}}"/>
+            value="{{dollInventory.primaryColor}}" />
     </div>
     <div class="form-group">
         <label>Secondary Color</label>
         <input type="color" data-color="dollInventory.secondaryColor"
-            value="{{dollInventory.secondaryColor}}"/>
+            value="{{dollInventory.secondaryColor}}" />
+    </div>
+    <div class="form-group">
+        <label>display computed encumbrance with weight ratio instead of normal
+            encumbrance</label>
+        <input type="checkbox"
+            name="flags.sheetConfig.displayComputedEncumbrance"
+            checked="{{dollInventory.displayComputedEncumbrance}}" />
     </div>
     <h3 class="form-header">Inventory slots config</h3>
     {{#each dollInventory.location as |location id|}}

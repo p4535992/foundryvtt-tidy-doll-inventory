@@ -1,4 +1,9 @@
 div.window-app.sheet.item {
+    .window-content {
+        min-height: fit-content;
+
+    }
+
     .dollInventory.location-selector {
         padding: 0;
         color: red;

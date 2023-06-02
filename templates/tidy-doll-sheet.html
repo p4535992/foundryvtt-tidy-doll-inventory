@@ -1,4 +1,5 @@
 <form class="{{cssClass}}" autocomplete="off">
+    {{log this}}
     <div class="tidy5e-sheet {{#if
         actor.flags.tidy5e-sheet.allow-edit}}allow-edit{{/if}}">
 
@@ -580,6 +581,7 @@
 
                 <section class="center-pane ">
                     {{#unless @root.isNPC}} {{#with encumbrance}}
+                    {{log encumbrance}}
                             <div class="encumbrance {{#if
                             encumbered}}encumbered{{/if}}" title="{{localize
                             'TIDY5E.Encumbrance'}}">

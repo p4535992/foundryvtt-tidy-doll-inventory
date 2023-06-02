@@ -76,10 +76,8 @@ Hooks.on("renderItemSheet", async function (sheet, html, options) {
                 //allowing all locations
                 locations[loc].available = true;
             }
-            await sheet.item.setFlag("tidy-doll-inventory", "inventoryLocations",
-                locations
-            )
-            inventoryLocations = await sheet.item.getFlag("tidy-doll-inventory", "inventoryLocations");
+            await sheet.item.setFlag("tidy-doll-inventory", "inventoryLocations", locations)
+            inventoryLocations = locations
         }
 
         // adding the location selector on the sheet;
@@ -144,26 +142,43 @@ Hooks.on("renderItemSheet", async function (sheet, html, options) {
 
 
 });
+
 Hooks.on('item-piles-dropItem', async function (sourceActor, tokenSource, itemList, position) {
     fromUuid(tokenSource.tokenUuid).then(async (tokenTarget) => {
         let totalItemList = [];
+        let adding = false;
         //deleting embedded bags item if exist
         for (let item of itemList) {
             let flag = item.flags["tidy-doll-inventory"]?.bagSlots
             if (flag?.containerType == "bag") {
                 let itemToAdd = [];
-                for (let item of flag.innerItems) {
-                    if (item) { itemToAdd.push(item) }
+                for (let innerItem of flag.innerItems) {
+                    if (innerItem) {
+                        adding = true;
+                        let itemInstance = await sourceActor.items.get(innerItem._id)
+                        if (innerItem.flags["tidy-doll-inventory"]) {
+                            let flags = itemInstance.flags;
+                            delete flags["tidy-doll-inventory"];
+
+                            await itemInstance.update({ "flags": flags })
+                        }
+                        itemToAdd.push(itemInstance);
+                        innerItem = null
+                    }
                 };
-                let idToDelete = itemToAdd.map(i => i._id);
                 totalItemList = totalItemList.concat(itemToAdd);
             }
+            // await item.unsetFlag("tidy-doll-sheet", "bagSlots")
         }
-        await game.itempiles.API.transferItems(sourceActor, tokenTarget, totalItemList)
+        if (adding) {
+            await game.itempiles.API.transferItems(sourceActor, tokenTarget, totalItemList);
+
+        }
 
     })
 
 })
+
 Hooks.on("dnd5e.getItemContextOptions", async function (item, contextOptions) {
 
     if (item.flags["tidy-doll-inventory"]?.equippedSlot || item.flags["tidy-doll-inventory"]?.bagSlot) {
@@ -174,9 +189,8 @@ Hooks.on("dnd5e.getItemContextOptions", async function (item, contextOptions) {
                     equipIcon[0].parentNode.remove()
                 }
             }
-
             , 80// time to tidysheet for changing context menu
         )
     }
+});
 
-})
