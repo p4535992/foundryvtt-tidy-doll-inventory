@@ -5,6 +5,7 @@
 import DollInventorySheet from "./sheet/DollInventorySheet.mjs";
 import { dollConfig } from "./config.js";
 import { preloadDollInventoryTemplates } from "./preloadTemplates.js";
+import SheetSettingForm from "./SheetSettingForm.js"
 
 Hooks.once('init', async function () {
     CONFIG.debug.hooks = true;
@@ -31,6 +32,55 @@ Hooks.once('init', async function () {
         config: true,
         type: Boolean,
         default: false,
+    });
+    game.settings.register("tidy-doll-inventory", "hideInventory", {
+        name: "hide inventory lists for players",
+        hint: "if checked, the players will only access their items thru the doll inventory, inventory list will be hidden in attribute tab and inventory tab won't be displayed",
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: false,
+    })
+    game.settings.register("tidy-doll-inventory", "defaultBagSlotsNumers", {
+        name: "default bag slots",
+        hint: "number of slots available in the default bag for characters",
+        scope: "world",
+        config: true,
+        type: Number,
+        default: 8,
+    });
+    game.settings.register("tidy-doll-inventory", "hideSheetButton", {
+        name: "hide sheet selector button for players",
+        hint: "if checked the 'sheet' button in the header of character sheet will be hidden for players",
+        scope: "world",
+        config: true,
+        type: Boolean,
+        default: true,
+    })
+    game.settings.registerMenu("tidy-doll-inventory", "defaultSheetConfigMenu", {
+        name: "default sheet setting",
+        label: "default sheet setting",      // The text label used in the button
+        hint: "configure the default setting for tidy-doll-inventory sheets",
+        icon: "fas fa-cogs",               // A Font Awesome icon used in the submenu button
+        type: SheetSettingForm,   // A FormApplication subclass
+        restricted: true                   // Restrict this submenu to gamemaster only?
+    });
+    game.settings.register("tidy-doll-inventory", "defaultSheetConfig", {
+        config: false,
+        scope: 'world',     // "world" = sync to db, "client" = local storage
+        // we will use the menu above to edit this setting
+        type: Object,
+        default: {
+            dollInventory: {
+                displayComputedEncumbrance: true,
+                displayInventory: false,
+                location: dollConfig.inventory,
+                background: "",
+                primaryColor: "#FFFFFF",
+                secondaryColor: "#888888",
+                collapsedSections: [],
+            }
+        },        // can be used to set up the default structure
     });
     preloadDollInventoryTemplates()
 
@@ -144,38 +194,40 @@ Hooks.on("renderItemSheet", async function (sheet, html, options) {
 });
 
 Hooks.on('item-piles-dropItem', async function (sourceActor, tokenSource, itemList, position) {
-    fromUuid(tokenSource.tokenUuid).then(async (tokenTarget) => {
-        let totalItemList = [];
-        let adding = false;
-        //deleting embedded bags item if exist
-        for (let item of itemList) {
-            let flag = item.flags["tidy-doll-inventory"]?.bagSlots
-            if (flag?.containerType == "bag") {
-                let itemToAdd = [];
-                for (let innerItem of flag.innerItems) {
-                    if (innerItem) {
-                        adding = true;
-                        let itemInstance = await sourceActor.items.get(innerItem._id)
-                        if (innerItem.flags["tidy-doll-inventory"]) {
-                            let flags = itemInstance.flags;
-                            delete flags["tidy-doll-inventory"];
 
-                            await itemInstance.update({ "flags": flags })
-                        }
-                        itemToAdd.push(itemInstance);
-                        innerItem = null
+    let tokenTarget = await fromUuid(tokenSource.tokenUuid);
+
+    let totalItemList = [];
+    let adding = false;
+    //deleting embedded bags item if exist
+    for (let item of itemList) {
+        let flag = item.flags["tidy-doll-inventory"]?.bagSlots
+        if (flag?.containerType == "bag") {
+            let itemToAdd = [];
+            for (let innerItem of flag.innerItems) {
+                if (innerItem) {
+                    adding = true;
+                    let itemInstance = await sourceActor.items.get(innerItem._id)
+                    if (innerItem.flags["tidy-doll-inventory"]) {
+                        let flags = itemInstance.flags;
+                        delete flags["tidy-doll-inventory"];
+
+                        await itemInstance.update({ "flags": flags })
                     }
-                };
-                totalItemList = totalItemList.concat(itemToAdd);
-            }
-            // await item.unsetFlag("tidy-doll-sheet", "bagSlots")
+                    itemToAdd.push(itemInstance);
+                    innerItem = null
+                }
+            };
+            totalItemList = totalItemList.concat(itemToAdd);
         }
-        if (adding) {
-            await game.itempiles.API.transferItems(sourceActor, tokenTarget, totalItemList);
+        // await item.unsetFlag("tidy-doll-sheet", "bagSlots")
+    }
+    if (adding) {
+        await game.itempiles.API.transferItems(sourceActor, tokenTarget, totalItemList);
 
-        }
+    }
 
-    })
+
 
 })
 

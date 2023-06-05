@@ -1,20 +1,5 @@
 
-<div class="doll-item-list-filters">
-    <div class="flexrow form-group">
-        <label>display all favorites</label>
-        <input type="checkbox" class="display-favorites"
-            {{checked dollInventory.displayFavorites}}>
-    </div>
-    {{#each this.dollInventory.itemListFilters as |filter id| }}
-    <div class="form-group flexrow">
-        <label for="dollInventory.itemListFilters.{{id}}">{{filter.label}}</label>
-        <input class="doll-list-filter" type="checkbox"
-            data-filter="{{id}}" value="1"
-            {{checked filter.value}}>
-    </div>
-    {{/each}}
 
-</div>
 {{#each dollItemList as |section id|}}
 {{#if section.items}}
 <ul class="inventory-list items-list">

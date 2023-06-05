@@ -17,20 +17,16 @@
         <input type="color" data-color="dollInventory.secondaryColor"
             value="{{dollInventory.secondaryColor}}" />
     </div>
-    {{#if isGM}}
     <div class="form-group">
         <label>display computed encumbrance with weight ratio instead of normal
             encumbrance</label>
         <input type="checkbox"
-            name="flags.sheetConfig.displayComputedEncumbrance"
             checked="{{dollInventory.displayComputedEncumbrance}}" />
     </div>
-    {{/if}}
 
-    {{#if isGM}}
     <h3 class="form-header">Inventory slots config</h3>
     {{#each dollInventory.location as |location id|}}
-    <div class="form-group">
+    <div class="form-group flexrow">
         <h3>for key : {{id}} as {{location.label}}</h3>
         <div class="flexcol">
             <label for="dollInventory.location.{{id}}.label">
@@ -46,7 +42,10 @@
                 data-sheet-attr="dollInventory.location.{{id}}.icon"
                 alt="{{location.label}} icon">
         </div>
+        <div class="flexcol">
+            <label>display on sheet</label>
+            <input type="checkbox" {{checked location.display}}>
+        </div>
     </div>
     {{/each}}
-    {{/if}}
 </div>

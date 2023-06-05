@@ -446,8 +446,10 @@
             <a class="item " data-tab="attributes"
                data-tooltip="{{localize "DND5E.Attributes" }}">
                 <i class="fa-solid fa-user"></i></a>
-            <a class="item" data-tab="inventory" data-tooltip="{{ localize
+            {{#unless hideInventory}}
+                <a class="item" data-tab="inventory" data-tooltip="{{ localize
                     "DND5E.Inventory"}}"> <i class="fa-solid fa-sack"></i></a>
+            {{/unless}}
             <a class="item" data-tab="spellbook" data-tooltip="{{ localize
                     "DND5E.Spellbook" }}"><i class="fa-solid fa-book-sparkles"></i></a>
             <a class="item" data-tab="features" data-tooltip="{{ localize
@@ -476,16 +478,17 @@
 
             <div class="tab attributes" data-group="primary"
                  data-tab="attributes">
-                    {{#if dollInventory.displayFavorites}}
 
-                <div class="tidy-specials">
-                    <div class="alt-trait-pos"></div>
+                {{#if dollInventory.displayFavorites}}
+                    <div class="tidy-specials">
+                        <div class="alt-trait-pos"></div>
 
-                    {{!-- Actions --}}
-                    <div class="actions-target list-layout"></div>
-                    <div class="favorites-target "></div>
-                   
-                </div> {{/if}}
+                        {{!-- Actions --}}
+                        <div class="actions-target list-layout"></div>
+                        <div class="favorites-target "></div>
+
+                    </div>
+                {{/if}}
 
                 <div class="left-pane" style=" background:
                         linear-gradient(to bottom,
@@ -580,8 +583,28 @@
                 </div>
 
                 <section class="center-pane ">
+
+                    <div class="doll-item-list-filters flexrow">
+                        <div class="flexrow form-group">
+                            <label>display all favorites</label>
+                            <input type="checkbox" class="display-favorites"
+                                   {{checked dollInventory.displayFavorites}}>
+                        </div>
+                        {{#unless hideInventory}}
+
+                            {{#each this.dollInventory.itemListFilters as |filter id| }}
+                                <div class="form-group flexrow">
+                                    <label for="dollInventory.itemListFilters.{{id}}">{{filter.label}}</label>
+                                    <input class="doll-list-filter" type="checkbox"
+                                           data-filter="{{id}}" value="1"
+                                           {{checked filter.value}}>
+                                </div>
+                            {{/each}}
+                        {{/unless}}
+
+                    </div>
                     {{#unless @root.isNPC}} {{#with encumbrance}}
-                    {{log encumbrance}}
+                            {{log encumbrance}}
                             <div class="encumbrance {{#if
                             encumbered}}encumbered{{/if}}" title="{{localize
                             'TIDY5E.Encumbrance'}}">
@@ -599,8 +622,9 @@
                             </div>
                         {{/with}}
                     {{/unless}}
+                    {{>"modules/tidy-doll-inventory/templates/dollCurrency.hbs" currency=dollInventory.currency}}
                     <div class="flexrow">
-                        <div class="tidy-doll">
+                        <div class="tidy-doll flexrow">
                             <div class="inventory-doll inventory-list"
                                  style="background-image:url({{dollInventory.background}})">
                                 <div class="doll-switch" data-hand="main"><i
@@ -635,9 +659,7 @@
                                                     <div class="item-image">
                                                         <i class="fa fa-dice-d20"></i>
                                                     </div>
-                                                    <h3>
-                                                        {{item.name}}
-                                                    </h3>
+
 
                                                 </div>
                                                 {{>"modules/tidy-doll-inventory/templates/itemCard.hbs"item=item}}
@@ -705,14 +727,16 @@
 
                             </div>
                         </div>
-                        <div class="tidy-tools">
-
-                            {{>"modules/tidy-doll-inventory/templates/dollItemList.hbs"}}
-                            {{!-- Traits --}}
-
-
-
+                        {{#unless hideInventory}}
+                        <div class="toggle-doll-item-list 
+                        {{#if dollInventory.displayInventory}}visible{{/if}}">
+                            <i class="fa-solid fa-chevrons-left "></i>
                         </div>
+                            <div class="tidy-tools {{#if dollInventory.displayInventory}}visible{{/if}}">
+                                {{>"modules/tidy-doll-inventory/templates/dollItemList.hbs"}}
+                                {{!-- Traits --}}
+                            </div>
+                        {{/unless}}
                     </div>
 
                 </section>

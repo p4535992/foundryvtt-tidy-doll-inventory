@@ -5,6 +5,7 @@ export const preloadDollInventoryTemplates = async function () {
         // Actor Sheet Partials
         "modules/tidy-doll-inventory/templates/dollItemList.hbs",
         "modules/tidy-doll-inventory/templates/itemCard.hbs",
+        "modules/tidy-doll-inventory/templates/dollCurrency.hbs",
 
     ];
 
