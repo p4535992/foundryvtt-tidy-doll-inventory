@@ -1,5 +1,9 @@
 <div class="sheet-config-tab dnd5e">
+    {{#unless isActor}}
 
+    <button class="button">
+        <i class="fa-solid fa-floppy-disk"></i>Save setting</button>
+    {{/unless}}
     <h3 class="form-header">Sheet Config</h3>
     <div class="form-group">
         <label>Inventory background image</label>
@@ -17,12 +21,22 @@
         <input type="color" data-color="dollInventory.secondaryColor"
             value="{{dollInventory.secondaryColor}}" />
     </div>
+    <div class="form-group">
+        <label>Tab Primary Color</label>
+        <input type="color" data-color="dollInventory.thirdColor"
+            value="{{dollInventory.thirdColor}}" />
+    </div>
+    <div class="form-group">
+        <label>Tab Secondary Color</label>
+        <input type="color" data-color="dollInventory.fourthColor"
+            value="{{dollInventory.fourthColor}}" />
+    </div>
     {{#if isGM}}
     <div class="form-group">
         <label>display computed encumbrance with weight ratio instead of normal
             encumbrance</label>
         <input type="checkbox"
-            name="flags.sheetConfig.displayComputedEncumbrance"
+            data-attr="dollIventory.displayComputedEncumbrance"
             checked="{{dollInventory.displayComputedEncumbrance}}" />
     </div>
     {{/if}}
@@ -46,6 +60,11 @@
                 data-sheet-attr="dollInventory.location.{{id}}.icon"
                 alt="{{location.label}} icon">
         </div>
+        <div class="flexcol">
+            <label>display in doll inventory</label>
+            <input type="checkbox"
+                data-attr="dollInventory.location.{{id}}.display"
+                {{checked location.display}} /> </div>
     </div>
     {{/each}}
     {{/if}}

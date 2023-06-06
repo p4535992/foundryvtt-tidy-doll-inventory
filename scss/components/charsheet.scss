@@ -1,5 +1,7 @@
 div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
 
+
+
     div.waiting {
         position: absolute;
         z-index: +1;
@@ -72,11 +74,14 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
     }
 
     form div section.sheet-body {
+        background-size: auto 100%, cover;
         padding: 0 0 0 0;
 
         .tab {
             width: 100%;
-            padding: 0
+            padding: 0;
+
+
         }
 
         .doll-currency {
@@ -323,13 +328,13 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                 position: absolute;
                 right: 0;
                 top: 3rem;
-                box-shadow: 0px 0px 15px gray inset;
+                box-shadow: 0px 0px 15px rgb(99, 166, 131) inset;
                 border-radius: 50%;
                 padding: 0.2rem;
                 transition: 0.2s;
 
                 &.visible {
-                    transform: rotate(180deg)
+                    box-shadow: 0px 0px 15px rgb(166, 99, 99) inset;
                 }
             }
 
@@ -454,17 +459,20 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                     }
 
                     .item-name {
-                        position: absolute;
+                        position: relative;
                         opacity: 1;
                         color: white;
                         text-align: center;
                         height: 100%;
+                        width: 100%;
+                        overflow: hidden;
 
                         div.item-image {
                             opacity: 0;
                             max-width: 50%;
                             transition: 0.2s;
-                            top: 8px;
+                            top: 10%;
+                            left: 10%;
 
                             position: relative;
 
@@ -479,13 +487,11 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                         }
 
                         &:hover {
-
-
                             .item-image {
                                 opacity: 0.7;
 
                                 i {
-                                    font-size: 2rem;
+                                    font-size: 1.5rem;
                                     cursor: pointer;
                                 }
                             }

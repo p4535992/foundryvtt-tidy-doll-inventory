@@ -16,6 +16,9 @@
             box-shadow:0px 5px 25px rgba(128, 128, 128, 0.298);
             padding: 0px 25px;
             align-items: center;
+            display:flex;
+            flex-direction: row;
+            justify-content: space-between;
 
             h3 {
                 background: var(--t5e-faint-color);

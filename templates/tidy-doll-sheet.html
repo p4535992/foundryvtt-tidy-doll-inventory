@@ -1,5 +1,4 @@
 <form class="{{cssClass}}" autocomplete="off">
-    {{log this}}
     <div class="tidy5e-sheet {{#if
         actor.flags.tidy5e-sheet.allow-edit}}allow-edit{{/if}}">
 
@@ -604,7 +603,6 @@
 
                     </div>
                     {{#unless @root.isNPC}} {{#with encumbrance}}
-                            {{log encumbrance}}
                             <div class="encumbrance {{#if
                             encumbered}}encumbered{{/if}}" title="{{localize
                             'TIDY5E.Encumbrance'}}">
@@ -639,6 +637,7 @@
 
                                 {{#each dollInventory.location as |location
                                     locationID|}}
+                                    {{#if location.display}}
                                     <ul class="doll-location item-list"
                                         data-location="{{locationID}}"
                                         style="background-image:url(
@@ -669,6 +668,7 @@
                                         {{/if}}
 
                                     </ul>
+                                    {{/if}}
                                 {{/each}}
                             </div>
                             <div class="doll-bags inventory-list">
@@ -729,8 +729,8 @@
                         </div>
                         {{#unless hideInventory}}
                         <div class="toggle-doll-item-list 
-                        {{#if dollInventory.displayInventory}}visible{{/if}}">
-                            <i class="fa-solid fa-chevrons-left "></i>
+                        {{#if dollInventory.displayInventory}}visible{{/if}}" data-tooltip="toggle inventory">
+                            <i class="fa-solid fa-sack"></i>
                         </div>
                             <div class="tidy-tools {{#if dollInventory.displayInventory}}visible{{/if}}">
                                 {{>"modules/tidy-doll-inventory/templates/dollItemList.hbs"}}
@@ -996,8 +996,7 @@
             <div class="tab config"
                  data-group="primary" data-tab="config">
 
-                {{>
-                    "modules/tidy-doll-inventory/templates/sheet-config.hbs"}}
+                {{>"modules/tidy-doll-inventory/templates/sheet-config.hbs" dollInventory=dollInventory isActor=true}}
             </div>
         </section>
     </div>
