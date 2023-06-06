@@ -179,7 +179,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
         super.activateListeners(html);
 
 
-        if (this.actor.getFlag("tidy-doll-inventory", "itemsInit")) {
+        if (!this.actor.getFlag("tidy-doll-inventory", "itemsInit")) {
             html.prepend(`
             <div class="waiting">
             <i class="fa-solid fa-spinner fa-spin"></i>
