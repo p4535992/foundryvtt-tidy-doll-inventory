@@ -34,7 +34,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
     async initInventory() {
         let config = await this.actor.getFlag("tidy-doll-inventory", "sheetConfig")
         if (!config) {
-            this.dollInventory = game.settings.get('tidy-doll-inventory', 'defaultSheetConfig').dollInventory
+            this.dollInventory = foundry.utils.duplicate(game.settings.get('tidy-doll-inventory', 'defaultSheetConfig'))
 
             this.dollInventory.itemListFilters = {
 
@@ -85,7 +85,6 @@ export default class DollInventorySheet extends Tidy5eSheet {
     };
     resumeCurrency(context) {
         let pouchList = this.actor.items.filter(i => i.flags["tidy-doll-inventory"]?.bagSlots?.containerType == "pouch");
-        console.log(pouchList)
         context.dollInventory.currency = {};
 
         let details = {
@@ -94,22 +93,18 @@ export default class DollInventorySheet extends Tidy5eSheet {
         };
 
         let sum = details.actor
-
-
-
-
-
         context.dollInventory.currency = {
             details: details,
             sum: sum
         }
 
-        console.log(context.dollInventory.currency)
-
         return context
 
     }
     async computeItemsWeight(context) {
+        if (!this.dollInventory.computeEncumbrance) { return context }
+
+
         // weight of items
         let itemsWeight = 0
         for (let item of context.actor.items) {
@@ -154,7 +149,8 @@ export default class DollInventorySheet extends Tidy5eSheet {
 
         context.encumbrance.value = Math.round((itemsWeight + actorCoinsWeight + pouchCoinWeight) * 100) / 100;
         context.encumbrance.pct = Math.round((context.encumbrance.value / context.encumbrance.max) * 100);
-        context.encumbrance.encumbred = (context.encumbrance.pct >= 66)
+        context.encumbrance.encumbred = (context.encumbrance.pct >= 66);
+
     }
     prepareItemList(context) {
         let filters = this.dollListFilters;
@@ -237,10 +233,10 @@ export default class DollInventorySheet extends Tidy5eSheet {
 
     }
     async initItemsFlags(html) {
-        await this.actor.setFlag("tidy-doll-inventory", "itemsInit", true)
-        this.actor.items.forEach(async it => {
-
-            let locations = dollConfig.inventory;
+        await this.actor.setFlag("tidy-doll-inventory", "itemsInit", true);
+        let unflagedList=this.actor.items.filter(i=>!i.getFlag("tidy-doll-inventory", "inventoryLocation"));
+        unflagedList.forEach(async it => {
+        let locations=foundry.utils.duplicate(dollConfig.location);
             for (let loc in locations) {
                 //allowing all locations
                 locations[loc].available = true;

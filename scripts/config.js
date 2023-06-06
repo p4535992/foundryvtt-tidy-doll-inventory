@@ -6,7 +6,13 @@ export let dollConfig = {
         "tool",
         "loot"
     ],
-    inventory: {
+    primaryColor: "#ababab",
+    secondaryColor: "#dadcdb",
+    thirdColor: "#cdf4f9",
+    fourthColor: "#daffdb",
+    computeEncumbrance: true,
+    background: 'modules/tidy-doll-inventory/assets/silhouette.png',
+    location: {
         head: {
             label: "Head",
             icon: "modules/tidy-doll-inventory/assets/head.png",
@@ -20,6 +26,7 @@ export let dollConfig = {
             display: true
 
         },
+
         pants: {
             label: "Pants",
             icon: "modules/tidy-doll-inventory/assets/pants.png",

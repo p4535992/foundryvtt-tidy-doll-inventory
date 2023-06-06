@@ -340,10 +340,10 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                 display: grid;
                 grid-template-rows: repeat(8, 1fr);
                 grid-template-columns: repeat(6, 1fr);
-                background-size: 90% auto;
+                background-size: auto 100%;
                 background-repeat: no-repeat;
                 background-position: center;
-                min-width: 280px;
+                min-width: 200px;
                 max-height: fit-content;
                 flex: 2;
 
@@ -421,8 +421,7 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                     border: 2px solid gray;
                     font-size: x-small;
                     border-radius: 10px;
-                    background-color: rgb(128, 128, 128);
-                    background-size: cover;
+                    background-size: auto 100%;
                     background-position: center;
                     transition: 0.2s;
                     transition-delay: 0.3s;

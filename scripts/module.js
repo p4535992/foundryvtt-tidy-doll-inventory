@@ -9,6 +9,7 @@ import SheetSettingForm from "./SheetSettingForm.js"
 
 Hooks.once('init', async function () {
     CONFIG.debug.hooks = true;
+    CONFIG.dollInventory = dollConfig;
 
 
     //registering the doll sheet
@@ -75,7 +76,7 @@ Hooks.once('init', async function () {
                 displayComputedEncumbrance: true,
                 displayInventory: false,
                 location: dollConfig.inventory,
-                background: "",
+                background: 'modules/tidy-doll-inventory/assets/silhouette.png',
                 primaryColor: "#FFFFFF",
                 secondaryColor: "#888888",
                 collapsedSections: [],
@@ -121,7 +122,7 @@ Hooks.on("renderItemSheet", async function (sheet, html, options) {
 
         //creating dollInventory flag object if none
         if (!inventoryLocations) {
-            let locations = dollConfig.inventory;
+            let locations = dollConfig.location;
             for (let loc in locations) {
                 //allowing all locations
                 locations[loc].available = true;

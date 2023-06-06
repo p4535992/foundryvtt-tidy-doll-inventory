@@ -13,7 +13,6 @@ export default class SheetSettingForm extends FormApplication {
     }
     activateListeners(html) {
         super.activateListeners(html);
-        alert('yguvh')
     }
     _updateObject(event, formData) {
         const data = expandObject(formData);
