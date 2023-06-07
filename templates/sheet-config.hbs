@@ -35,9 +35,8 @@
     <div class="form-group">
         <label>display computed encumbrance with weight ratio instead of normal
             encumbrance</label>
-        <input type="checkbox"
-            data-attr="dollIventory.displayComputedEncumbrance"
-            checked="{{dollInventory.displayComputedEncumbrance}}" />
+        <input type="checkbox" class="compute-weight"
+            {{checked dollIventory.computeEncumbrance}} />
     </div>
     {{/if}}
 

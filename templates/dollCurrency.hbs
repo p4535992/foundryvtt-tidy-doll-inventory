@@ -1,35 +1,41 @@
-<div class="doll-currency">
+<div class="doll-currency-item flexrow">
+    <h5 class="doll-currency-label">{{label}}
+        {{#if isItem}}{{#ifnotequal index 0}}
+        <i class="fa-solid fa-sack-dollar"
+            data-item-id="{{targetId}}"></i>
+        {{/ifnotequal}}
+        {{else}}
+        <i class="fa-solid fa-chevrons-down expand-details"
+            data-tooltip="toggle details"></i>
+        {{/if}}
 
-    <ol class="currency">
-
-        <li class="currency-header" title="Currency">
-            {{currency.sum.sectionName}}
-        </li>
+    </h5>
+    <ol class="currency flexrow">
         <li class="currency-item pp" title="Platinum">
-            {{curency.sum.currency.pp}}
+            {{currency.pp}}
             <label class="denomination pp"
                 data-denom="pp">pp</label>
         </li>
         <li class="currency-item gp" title="Gold">
-            {{curency.sum.currency.gp}}
+            {{currency.gp}}
             <label
                 class="denomination gp"
                 data-denom="gp">gp</label>
         </li>
         <li class="currency-item ep" title="Electrum">
-            {{curency.sum.currency.ep}}
+            {{currency.ep}}
             <label
                 class="denomination ep"
                 data-denom="ep">ep</label>
         </li>
         <li class="currency-item sp" title="Silver">
-            {{curency.sum.currency.sp}}
+            {{currency.sp}}
             <label
                 class="denomination sp"
                 data-denom="sp">sp</label>
         </li>
         <li class="currency-item cp" title="Copper">
-            {{curency.sum.currency.cp}}
+            {{currency.cp}}
             <label
                 class="denomination cp"
                 data-denom="cp">cp</label>

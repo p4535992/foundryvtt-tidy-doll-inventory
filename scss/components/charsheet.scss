@@ -1,7 +1,4 @@
 div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
-
-
-
     div.waiting {
         position: absolute;
         z-index: +1;
@@ -77,11 +74,11 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
         background-size: auto 100%, cover;
         padding: 0 0 0 0;
 
+
+
         .tab {
             width: 100%;
-            padding: 0;
-
-
+            padding: 0
         }
 
         .doll-currency {
@@ -102,6 +99,16 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                 -ms-flex-align: center;
                 align-items: center;
                 list-style: none;
+            }
+
+            .currency-details {
+                max-height: 0px;
+                transition: 0.3s;
+                overflow: hidden;
+
+                &.visible {
+                    max-height: 500px
+                }
             }
         }
 
@@ -167,15 +174,10 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
             border-top: 6px double;
             position: relative;
             overflow: visible;
+            border-image: url('../assets/border.png') 100 100 / 6px 0px 0px 6px;
+            padding: 10px 0px 0px 10px;
+            height: 100%;
 
-            div.inventory-toggle {
-                position: absolute;
-                right: 0%;
-                top: 0%;
-                text-shadow: 0px 0px 15px orange;
-                z-index: +1;
-
-            }
 
             .doll-item-list-filters {
                 font-size: x-small;
@@ -327,7 +329,7 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
             .toggle-doll-item-list {
                 position: absolute;
                 right: 0;
-                top: 3rem;
+                top: 0.5rem;
                 box-shadow: 0px 0px 15px rgb(99, 166, 131) inset;
                 border-radius: 50%;
                 padding: 0.2rem;

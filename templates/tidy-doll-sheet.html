@@ -620,7 +620,18 @@
                             </div>
                         {{/with}}
                     {{/unless}}
-                    {{>"modules/tidy-doll-inventory/templates/dollCurrency.hbs" currency=dollInventory.currency}}
+
+                    <div class="doll-currency">
+                    {{>"modules/tidy-doll-inventory/templates/dollCurrency.hbs" currency=dollInventory.currency.sum isItem=false label="total currency"}}
+                        <div class="currency-details">
+                        {{#each dollInventory.currency.details as |detail index|}}
+                            {{>"modules/tidy-doll-inventory/templates/dollCurrency.hbs" currency=detail.currency isItem=true label=detail.label index=index}}
+                        {{/each}}
+                        </div>
+                    </div>   
+
+                    
+                    
                     <div class="flexrow">
                         <div class="tidy-doll flexrow">
                             <div class="inventory-doll inventory-list"
@@ -674,7 +685,8 @@
                             <div class="doll-bags inventory-list">
                                 <ul class="bag-list item-list">
                                     {{#each dollInventory.bags as |bag id|}}
-                                        {{#if bag.system.equipped}}
+                                        {{log bag}}
+                                        {{log "______________bag"}}
                                             <li class="item bag"
                                                 data-item-id="{{bag._id}}">
                                                 <h4 class="bag-name flexrow">
@@ -721,7 +733,6 @@
                                                     {{/each}}
                                                 </ul>
                                             </li>
-                                        {{/if}}
                                     {{/each}}
                                 </ul>
 
