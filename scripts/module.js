@@ -71,17 +71,7 @@ Hooks.once('init', async function () {
         scope: 'world',     // "world" = sync to db, "client" = local storage
         // we will use the menu above to edit this setting
         type: Object,
-        default: {
-            dollInventory: {
-                displayComputedEncumbrance: true,
-                displayInventory: false,
-                location: dollConfig.inventory,
-                background: 'modules/tidy-doll-inventory/assets/silhouette.png',
-                primaryColor: "#FFFFFF",
-                secondaryColor: "#888888",
-                collapsedSections: [],
-            }
-        },        // can be used to set up the default structure
+        default: dollConfig        // can be used to set up the default structure
     });
     preloadDollInventoryTemplates()
 
