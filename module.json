@@ -1,20 +1,20 @@
 {
   "id": "tidy-doll-inventory",
   "title": "Tidy doll-inventory",
-  "description": "",
-  "version": "This is auto replaced",
+  "description": "A module that allow drag and drop inventory management on a 'doll' ; in a way many rpg video games do. It requires tidy5e-sheet and item-pile modules",
+  "version": "#{VERSION}#",
   "library": "false",
   "manifestPlusVersion": "1.2.0",
   "compatibility": {
     "minimum": 10,
-    "verified": 10,
-    "maximum": 11
+    "verified": 10.291,
+    "maximum": 10
   },
   "authors": [
     {
-      "name": "The League of Extraordinary FVTT Developers",
-      "url": "https://github.com/League-of-Foundry-Developers",
-      "discord": "discordID#0001"
+      "name": "Rwanoux",
+      "url": "https://github.com/rwanoux",
+      "discord": "rwanoux#3031"
     }
   ],
   "relationships": {
@@ -61,9 +61,15 @@
       "path": "languages/en.json"
     }
   ],
-  "url": "This is auto replaced",
-  "manifest": "This is auto replaced",
-  "download": "This is auto replaced",
+  "url": "#{URL}#",
+  "manifest": "#{MANIFEST}#",
+  "download": "#{DOWNLOAD}#",
   "license": "LICENSE",
-  "readme": "README.md"
+  "readme": "README.md",
+  "media": [
+    {
+      "type": "icon",
+      "url": "https://avatars.githubusercontent.com/u/18176317?v=4"
+    }
+  ]
 }
