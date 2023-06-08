@@ -65,7 +65,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
         this.prepareItemList(context);
         this.resumeCurrency(context);
         context.hideInventory = game.user.isGM ? false : game.settings.get("tidy-doll-inventory", "hideInventory");
-        context.encumbrance=await this.computeItemsWeight(context);
+        context.encumbrance = await this.computeItemsWeight(context);
 
         return context
     }
@@ -161,12 +161,12 @@ export default class DollInventorySheet extends Tidy5eSheet {
         context.encumbrance.value = Math.round((itemsWeight + actorCoinsWeight + pouchCoinWeight) * 100) / 100;
         context.encumbrance.pct = Math.round((context.encumbrance.value / context.encumbrance.max) * 100);
         context.encumbrance.encumbred = (context.encumbrance.pct >= 66);
-return context.encumbrance
+        return context.encumbrance
     }
     prepareItemList(context) {
         let filters = this.dollListFilters;
 
-        context.dollItemList = context.inventory;
+        context.dollItemList = foundry.utils.duplicate(context.inventory);
         for (let section in context.dollItemList) {
             let itemList = context.dollItemList[section].items
 
