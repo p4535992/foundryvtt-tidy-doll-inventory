@@ -497,33 +497,30 @@
                         ">
 
                     {{!-- Skills --}}
-                    <ul class="skills-list">
-                        {{#each config.skills as |label s|}}
-                            {{#with (lookup ../skills s) as |skill|}}
-                                <li class="skill {{#if
-                                skill.value}}proficient{{/if}}"
-                                    data-skill="{{s}}">
-                                    <a class="config-button" data-action="skill"
-                                       data-tooltip="{{localize
-                                    'DND5E.SkillConfigure'}}">
-                                        <i class="fas fa-cog"></i>
-                                    </a>
-                                    <input type="hidden"
-                                           name="system.skills.{{s}}.value"
-                                           value="{{skill.value}}" data-dtype="Number">
-                                    <a class="proficiency-toggle skill-proficiency"
-                                       title="{{skill.hover}}">{{{skill.icon}}}</a>
-                                    <h4 class="skill-name rollable">{{skill.label}}</h4>
-                                    <span class="skill-ability">{{skill.abbreviation}}</span>
-                                    <span class="skill-mod">{{numberFormat
-                                    skill.total decimals=0 sign=true}}</span>
-                                    <span class="skill-passive"
-                                          title="{{skill.label}} ({{ localize
-                                    'DND5E.Passive' }})">({{skill.passive}})</span>
-                                </li>
-                            {{/with}}
-                        {{/each}}
-                    </ul>
+					<ul class="skills-list">
+						{{#each config.skills as |label s|}}
+						{{#with (lookup ../skills s) as |skill|}}
+						<li class="proficiency-row skill {{#if skill.value}}proficient{{/if}}"
+							data-skill="{{s}}" data-property="skills" data-key="{{s}}">
+							<a class="config-button" data-action="skill"
+								data-tooltip="{{localize 'DND5E.SkillConfigure'}}">
+								<i class="fas fa-cog"></i>
+							</a>
+							<input type="hidden" name="system.skills.{{s}}.value"
+								value="{{skill.baseValue}}" data-dtype="Number">
+							<input type="hidden" name="system.skills.{{s}}.ability"
+								value="{{skill.ability}}">
+							<a class="proficiency-toggle skill-proficiency"
+								title="{{skill.hover}}">{{{skill.icon}}}</a>
+							<h4 class="skill-name rollable">{{skill.label}}</h4>
+							<span class="skill-ability">{{skill.abbreviation}}</span>
+							<span class="skill-mod">{{numberFormat skill.total decimals=0 sign=true}}</span>
+							<span class="skill-passive"
+								title="{{skill.label}} ({{ localize 'DND5E.Passive' }})">({{skill.passive}})</span>
+						</li>
+						{{/with}}
+						{{/each}}
+					</ul>
 
                     {{!-- Traits --}}
                     {{>"modules/tidy5e-sheet/templates/actors/parts/tidy5e-traits.html"}}
