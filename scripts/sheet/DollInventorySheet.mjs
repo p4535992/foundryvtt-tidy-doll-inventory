@@ -165,7 +165,6 @@ export default class DollInventorySheet extends Tidy5eSheet {
     }
     prepareItemList(context) {
         let filters = this.dollListFilters;
-
         context.dollItemList = foundry.utils.duplicate(context.inventory);
         for (let section in context.dollItemList) {
             let itemList = context.dollItemList[section].items
@@ -181,7 +180,6 @@ export default class DollInventorySheet extends Tidy5eSheet {
                             break;
                         default:
                             break;
-
                     }
                 }
                 context.dollItemList[section].items = itemList
