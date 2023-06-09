@@ -224,7 +224,7 @@ Hooks.on('item-piles-dropItem', async function (sourceActor, tokenSource, itemLi
 
 Hooks.on("dnd5e.getItemContextOptions", async function (item, contextOptions) {
 
-    if (item.flags["tidy-doll-inventory"]?.equippedSlot || item.flags["tidy-doll-inventory"]?.bagSlot) {
+    if (item.flags["tidy-doll-inventory"]?.equippedSlot || item.flags["tidy-doll-inventory"]?.bagContainer) {
         setTimeout(
             () => {
                 let equipIcon = document.body.querySelectorAll("#context-menu li i.fa-user-alt");
