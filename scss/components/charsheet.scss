@@ -14,47 +14,60 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
         }
     }
 
-    nav.tidy5e-navigation.tabs {
-        justify-content: end;
-        position: absolute;
-        bottom: -2.5rem;
+    .tidy5e-header {
+        height: 12rem;
+    }
+
+    nav.tabs {
         width: 100%;
+        right: 0;
+        justify-content: space-around;
+        top: 13rem;
+        z-index: +1;
+
+
 
 
         div.toggle-allow-edit {
             background: none;
             border: 1px solid transparent;
 
-
+            /*
             span {
                 position: relative;
                 top: -0.5rem;
-            }
+                left: -1rem;
+            }*/
         }
 
         a.item,
         a.item:first-child {
+            text-align: center;
             transition: 0.3s;
-            padding: 0px 10px;
+            padding: 3px 5px;
             position: relative;
-            max-width: 2rem;
-            height: 2.5rem;
+            height: 2rem;
             border: none;
-            box-shadow: 0px 0px 15px black;
-            clip-path: polygon(0 0, 100% 0%, 100% 30%, 50% 70%, 0% 30%);
+            box-shadow: 0px -15px 15px rgb(141, 141, 141) inset;
+            clip-path: polygon(0 0, 100% 0%, 100% 60%, 50% 70%, 0% 60%);
 
             &[data-tab="attributes"] i {
                 color: black
             }
 
             &.active {
-                padding: 3px 8px;
+                z-index: +1;
+                padding: 3px 3px;
                 font-size: larger;
                 clip-path: polygon(0 0, 100% 1%, 100% 74%, 50% 100%, 0 74%);
+                box-shadow: 0px -15px 15px rgba(98, 125, 125, 0.493) inset;
+
 
             }
 
             &:hover {
+                z-index: +1;
+
                 color: black;
                 clip-path: polygon(0 0, 100% 1%, 100% 74%, 50% 100%, 0 74%);
 
@@ -78,7 +91,6 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
 
         .tab {
             width: 100%;
-            padding: 0
         }
 
         .doll-currency {
@@ -119,6 +131,7 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
             overflow: auto;
             width: 250px;
             max-width: 300px;
+            max-height: 50%;
             background: url(../../../systems/dnd5e/ui/parchment.jpg) repeat;
             box-shadow: 0px 0px 20px black;
             border-radius: 15px;
@@ -130,6 +143,14 @@ div.tidy5e.sheet.actor.doll-inventory-sheet.actor {
                 ul {
                     li {
                         overflow: visible;
+
+                        .item-name {
+                            min-width: 10%;
+
+                            h4 {
+                                min-width: fit-content
+                            }
+                        }
                     }
 
                 }

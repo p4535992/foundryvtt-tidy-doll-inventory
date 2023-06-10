@@ -30,7 +30,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
 
 
     async initInventory() {
-        let config = await this.actor.getFlag("tidy-doll-inventory", "sheetConfig")
+        let config = this.actor.getFlag("tidy-doll-inventory", "sheetConfig")
         if (!config) {
             this.dollInventory = foundry.utils.duplicate(game.settings.get('tidy-doll-inventory', 'defaultSheetConfig'))
 
@@ -342,7 +342,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
         ui.notifications.notify("creating default bag")
         let defaultsSlots = game.settings.get('tidy-doll-inventory', 'defaultBagSlotsNumers');
         let bag = {
-            name: this.actor.name + "_default bag",
+            name: this.actor.name + " inventory",
             type: "backpack",
             system: {
                 "capacity.value": defaultsSlots,
@@ -471,12 +471,12 @@ export default class DollInventorySheet extends Tidy5eSheet {
     async changeFilter(ev) {
         let targetFilter = ev.currentTarget.dataset.filter;
         this.dollInventory.itemListFilters[targetFilter].value = ev.currentTarget.checked ? true : false;
-        await this.persistConfig();
+        this.persistConfig();
 
     }
     async displayFav(ev) {
         this.dollInventory.displayFavorites = ev.currentTarget.checked ? true : false;
-        await this.persistConfig()
+        this.persistConfig()
     }
     async _onReadyItem(ev) {
         let readys = ["ready1", "ready2", "ready3", "ready4"]
@@ -573,7 +573,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
     }
 
     async persistConfig() {
-        this.actor.setFlag("tidy-doll-inventory", "sheetConfig", this.dollInventory);
+        await this.actor.setFlag("tidy-doll-inventory", "sheetConfig", this.dollInventory);
 
     }
     _onClickCollapse(ev) {
@@ -588,11 +588,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
         inventoryElement.classList.toggle("visible");
         ev.currentTarget.classList.toggle('visible')
         this.dollInventory.displayInventory = inventoryElement.classList.contains("visible");
-        setTimeout(
-            this.persistConfig()
-            ,
-            400
-        )
+        this.persistConfig()
     }
 
     colorTabs(ev) {

@@ -108,7 +108,7 @@ Hooks.on("renderItemSheet", async function (sheet, html, options) {
     if (dollConfig.dropableTypes.includes(sheet.item.type)) {
 
         //getting flags on items for dollInventory 
-        let inventoryLocations = await sheet.item.getFlag("tidy-doll-inventory", "inventoryLocations");
+        let inventoryLocations = sheet.item.getFlag("tidy-doll-inventory", "inventoryLocations");
 
         //creating dollInventory flag object if none
         if (!inventoryLocations) {
@@ -122,7 +122,7 @@ Hooks.on("renderItemSheet", async function (sheet, html, options) {
         }
 
         // adding the location selector on the sheet;
-        if (game.user.isGM || await game.settings.get("tidy-doll-inventory", "playersCanSetSlot")) {
+        if (game.user.isGM || game.settings.get("tidy-doll-inventory", "playersCanSetSlot")) {
             let htmlElement = await renderTemplate("modules/tidy-doll-inventory/templates/itemLocationSelector.hbs", inventoryLocations);
             let form = html.find("form")
             html.find('.sheet-header').append(htmlElement);
@@ -143,7 +143,7 @@ Hooks.on("renderItemSheet", async function (sheet, html, options) {
     // creating flags on backpacks
     if (sheet.item.type == "backpack") {
         // getting dollInventory Bags flags
-        let bagFlags = await sheet.item.getFlag("tidy-doll-inventory", "bagSlots");
+        let bagFlags = sheet.item.getFlag("tidy-doll-inventory", "bagSlots");
 
         //if no flag creating it
         if (!bagFlags) {
@@ -214,7 +214,7 @@ Hooks.on('item-piles-dropItem', async function (sourceActor, tokenSource, itemLi
         // await item.unsetFlag("tidy-doll-sheet", "bagSlots")
     }
     if (adding) {
-        await game.itempiles.API.transferItems(sourceActor, tokenTarget, totalItemList);
+        game.itempiles.API.transferItems(sourceActor, tokenTarget, totalItemList);
 
     }
 
