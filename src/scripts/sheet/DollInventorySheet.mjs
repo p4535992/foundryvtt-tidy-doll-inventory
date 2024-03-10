@@ -1,5 +1,5 @@
-import { Tidy5eSheet } from '../../../tidy5e-sheet/scripts/tidy5e-sheet.js'
-import { dollConfig } from '../config.js';
+import { Tidy5eSheet } from "../../../tidy5e-sheet/scripts/tidy5e-sheet.js";
+import { dollConfig } from "../config.js";
 
 export default class DollInventorySheet extends Tidy5eSheet {
     constructor(...args) {
@@ -7,14 +7,12 @@ export default class DollInventorySheet extends Tidy5eSheet {
         this.initInventory();
     }
     get template() {
-        if (!game.user.isGM && this.actor.limited && !game.settings.get('tidy5e-sheet', "expandedSheetEnabled"))
+        if (!game.user.isGM && this.actor.limited && !game.settings.get("tidy5e-sheet", "expandedSheetEnabled"))
             return "modules/tidy5e-sheet/templates/actors/tidy5e-sheet-ltd.html";
         return "modules/tidy-doll-inventory/templates/tidy-doll-sheet.html";
     }
 
-
     static get defaultOptions() {
-
         return mergeObject(super.defaultOptions, {
             classes: ["tidy5e", "sheet", "actor", "character", "doll-inventory-sheet"],
             dragDrop: [
@@ -22,38 +20,32 @@ export default class DollInventorySheet extends Tidy5eSheet {
                 { dragSelector: ".item-list .item", dropSelector: null },
                 { dragSelector: ".item-list .item", dropSelector: "li.bagSlot" },
                 { dragSelector: ".doll-location .item", dropSelector: "div.clear-slot" },
-                { dragSelector: ".bag .bag-item", dropSelector: "div.clear-bag-slot" }
-            ]
-
+                { dragSelector: ".bag .bag-item", dropSelector: "div.clear-bag-slot" },
+            ],
         });
     }
 
-
     async initInventory() {
-        let config = this.actor.getFlag("tidy-doll-inventory", "sheetConfig")
+        let config = this.actor.getFlag("tidy-doll-inventory", "sheetConfig");
         if (!config) {
-            this.dollInventory = foundry.utils.duplicate(game.settings.get('tidy-doll-inventory', 'defaultSheetConfig'))
+            this.dollInventory = foundry.utils.duplicate(
+                game.settings.get("tidy-doll-inventory", "defaultSheetConfig"),
+            );
 
             this.dollInventory.itemListFilters = {
-
                 fav: {
                     label: "only favorite",
-                    value: false
+                    value: false,
                 },
                 unequipped: {
                     label: "only unequipped",
-                    value: true
+                    value: true,
                 },
-
-            }
+            };
             this.actor.setFlag("tidy-doll-inventory", "sheetConfig", this.dollInventory);
-
-
         } else {
             this.dollInventory = config;
         }
-
-
     }
 
     async getData(options) {
@@ -61,64 +53,67 @@ export default class DollInventorySheet extends Tidy5eSheet {
         const context = await super.getData(options);
         await this.filterDollItems();
         context.dollInventory = this.dollInventory;
-        context.dollInventory.bags = await this.initDollInventoryBags()
+        context.dollInventory.bags = await this.initDollInventoryBags();
         this.prepareItemList(context);
         this.resumeCurrency(context);
         context.hideInventory = game.user.isGM ? false : game.settings.get("tidy-doll-inventory", "hideInventory");
         context.encumbrance = await this.computeItemsWeight(context);
 
-        return context
+        return context;
     }
 
     async filterDollItems() {
-        let itemList = this.actor.items.filter(it => it.flags["tidy-doll-inventory"]?.equippedSlot);
+        let itemList = this.actor.items.filter((it) => it.flags["tidy-doll-inventory"]?.equippedSlot);
         for (let loc in this.dollInventory.location) {
-            let it = await this.actor.items.find(it => it.flags['tidy-doll-inventory']?.equippedSlot == loc);
+            let it = await this.actor.items.find((it) => it.flags["tidy-doll-inventory"]?.equippedSlot == loc);
             if (it) {
                 if (!it.system?.equipped) {
-                    it.update({ "system.equipped": true })
+                    it.update({ "system.equipped": true });
                 }
             }
             this.dollInventory.location[loc].item = it || null;
-
-        };
-    };
+        }
+    }
     resumeCurrency(context) {
-        let pouchList = this.actor.items.filter(i => i.flags["tidy-doll-inventory"]?.bagSlots?.containerType == "pouch");
+        let pouchList = this.actor.items.filter(
+            (i) => i.flags["tidy-doll-inventory"]?.bagSlots?.containerType == "pouch",
+        );
         context.dollInventory.currency = {};
 
-        let details = [{
-            label: this.actor.name,
-            targetId: "Actor." + this.actor._id,
-            currency: this.actor.system.currency
-        }]
+        let details = [
+            {
+                label: this.actor.name,
+                targetId: "Actor." + this.actor._id,
+                currency: this.actor.system.currency,
+            },
+        ];
 
         let sum = foundry.utils.duplicate(details[0].currency);
         for (let pouch of pouchList) {
             details.push({
                 label: pouch.name,
                 targetId: pouch._id,
-                currency: pouch.flags["tidy-doll-inventory"].bagSlots.currency
+                currency: pouch.flags["tidy-doll-inventory"].bagSlots.currency,
             });
             for (let curr in pouch.flags["tidy-doll-inventory"].bagSlots.currency) {
-                sum[curr] += pouch.flags["tidy-doll-inventory"].bagSlots.currency[curr]
+                sum[curr] += pouch.flags["tidy-doll-inventory"].bagSlots.currency[curr];
             }
         }
         context.dollInventory.currency = {
             details: details,
-            sum: sum
-        }
+            sum: sum,
+        };
 
-        return context
-
+        return context;
     }
     async computeItemsWeight(context) {
-        console.log(context)
-        if (!context.dollInventory.computeEncumbrance) { return context }
-
+        console.log(context);
+        if (!context.dollInventory.computeEncumbrance) {
+            return context;
+        }
 
         // weight of items
-        let itemsWeight = 0
+        let itemsWeight = 0;
         for (let item of context.actor.items) {
             let selfWeight = (item.system.weight || 0) * (item.system.quantity || 1);
             if (item.flags["tidy-doll-inventory"]?.bagContainer) {
@@ -128,12 +123,12 @@ export default class DollInventorySheet extends Tidy5eSheet {
                         selfWeight = 0;
                     } else {
                         let ratio = bag.flags["tidy-doll-inventory"]?.bagSlots?.weightRatio;
-                        selfWeight = Math.round((selfWeight * ratio) * 100) / 100;
+                        selfWeight = Math.round(selfWeight * ratio * 100) / 100;
                     }
                 }
             }
             itemsWeight += selfWeight;
-        };
+        }
         // weight of currency
         let actorCoinsWeight = 0;
         let pouchCoinWeight = 0;
@@ -147,42 +142,51 @@ export default class DollInventorySheet extends Tidy5eSheet {
             actorCoinsWeight += numCoins / currencyPerWeight;
             actorCoinsWeight = Math.round(actorCoinsWeight * 100) / 100;
 
-            for (let pouch of this.actor.items.filter(i => i.flags["tidy-doll-inventory"]?.bagSlots?.containerType == "pouch")) {
-                const numCoins = Object.values(pouch.flags["tidy-doll-inventory"]?.bagSlots?.currency).reduce((val, denom) => val + Math.max(denom, 0), 0);
+            for (let pouch of this.actor.items.filter(
+                (i) => i.flags["tidy-doll-inventory"]?.bagSlots?.containerType == "pouch",
+            )) {
+                const numCoins = Object.values(pouch.flags["tidy-doll-inventory"]?.bagSlots?.currency).reduce(
+                    (val, denom) => val + Math.max(denom, 0),
+                    0,
+                );
                 const currencyPerWeight = game.settings.get("dnd5e", "metricWeightUnits")
                     ? CONFIG.DND5E.encumbrance.currencyPerWeight.metric
                     : CONFIG.DND5E.encumbrance.currencyPerWeight.imperial;
-                pouchCoinWeight += (numCoins / currencyPerWeight) * (pouch.flags["tidy-doll-inventory"].bagSlots.currencyWeightRatio);
+                pouchCoinWeight +=
+                    (numCoins / currencyPerWeight) * pouch.flags["tidy-doll-inventory"].bagSlots.currencyWeightRatio;
                 pouchCoinWeight = Math.round(pouchCoinWeight * 100) / 100;
             }
-
         }
 
         context.encumbrance.value = Math.round((itemsWeight + actorCoinsWeight + pouchCoinWeight) * 100) / 100;
         context.encumbrance.pct = Math.round((context.encumbrance.value / context.encumbrance.max) * 100);
-        context.encumbrance.encumbred = (context.encumbrance.pct >= 66);
-        return context.encumbrance
+        context.encumbrance.encumbred = context.encumbrance.pct >= 66;
+        return context.encumbrance;
     }
     prepareItemList(context) {
         let filters = this.dollListFilters;
         context.dollItemList = foundry.utils.duplicate(context.inventory);
         for (let section in context.dollItemList) {
-            let itemList = context.dollItemList[section].items
+            let itemList = context.dollItemList[section].items;
 
             for (let filter in this.dollInventory.itemListFilters) {
                 if (this.dollInventory.itemListFilters[filter].value) {
                     switch (filter) {
                         case "unequipped":
-                            itemList = itemList?.filter(i => !i.flags["tidy-doll-inventory"]?.equippedSlot && !i.flags["tidy-doll-inventory"]?.bagContainer);
+                            itemList = itemList?.filter(
+                                (i) =>
+                                    !i.flags["tidy-doll-inventory"]?.equippedSlot &&
+                                    !i.flags["tidy-doll-inventory"]?.bagContainer,
+                            );
                             break;
                         case "fav":
-                            itemList = itemList?.filter(i => i.flags["tidy5e-sheet"]?.favorite);
+                            itemList = itemList?.filter((i) => i.flags["tidy5e-sheet"]?.favorite);
                             break;
                         default:
                             break;
                     }
                 }
-                context.dollItemList[section].items = itemList
+                context.dollItemList[section].items = itemList;
             }
         }
     }
@@ -190,81 +194,74 @@ export default class DollInventorySheet extends Tidy5eSheet {
     async activateListeners(html) {
         super.activateListeners(html);
 
-
         if (!this.actor.getFlag("tidy-doll-inventory", "itemsInit")) {
             html.prepend(`
             <div class="waiting">
             <i class="fa-solid fa-spinner fa-spin"></i>
             </div>
-            `)
+            `);
             await this.initItemsFlags(html);
-            html.find('div.waiting').remove()
-
+            html.find("div.waiting").remove();
         }
-        this.colorPages(html)
+        this.colorPages(html);
         if (this.dollInventory.location.mainHand.item?.system?.properties?.two) {
-            this.disableOffHand()
+            this.disableOffHand();
         }
 
-        let backgroundImage = html.find("img.img-edit")
+        let backgroundImage = html.find("img.img-edit");
         backgroundImage.click(this.editBackgroundImage.bind(this));
         this.colorTabs();
 
-
         html.find("[data-color]").change(this.changeColor.bind(this));
-        html.find("div.toggle-doll-item-list").click(this.displayFullInventory.bind(this))
-        html.find("nav.tabs a.item").click(this.colorTabs.bind(this))
+        html.find("div.toggle-doll-item-list").click(this.displayFullInventory.bind(this));
+        html.find("nav.tabs a.item").click(this.colorTabs.bind(this));
         html.find(".doll-switch").click(this._onSwitchStow.bind(this));
-        html.find(".bag-item .item-image").click(event => this._onReadyItem(event));
-        html.find(".doll-list-filter").click(event => this.changeFilter(event));
-        html.find(".doll-list-filter").click(event => this.changeFilter(event));
-        html.find(".display-favorites").click(event => this.displayFav(event));
-        html.find(".sheet-config-tab [data-attr]").change(event => this.changeLocationDisplay(event));
-        html.find(".sheet-config-tab .compute-weight").change(event => {
+        html.find(".bag-item .item-image").click((event) => this._onReadyItem(event));
+        html.find(".doll-list-filter").click((event) => this.changeFilter(event));
+        html.find(".doll-list-filter").click((event) => this.changeFilter(event));
+        html.find(".display-favorites").click((event) => this.displayFav(event));
+        html.find(".sheet-config-tab [data-attr]").change((event) => this.changeLocationDisplay(event));
+        html.find(".sheet-config-tab .compute-weight").change((event) => {
             this.dollInventory.computeEncumbrance = event.currentTarget.checked ? true : false;
-            this.persistConfig()
+            this.persistConfig();
         });
-        html.find(".doll-currency-item .expand-details").click(ev => {
-            html.find(".currency-details")[0].classList.toggle("visible")
-        })
-        html.find(".doll-currency-item [data-item-id]").click(ev => {
+        html.find(".doll-currency-item .expand-details").click((ev) => {
+            html.find(".currency-details")[0].classList.toggle("visible");
+        });
+        html.find(".doll-currency-item [data-item-id]").click((ev) => {
             let id = ev.currentTarget.dataset.itemId;
             let item = this.actor.items.get(id);
-            item.sheet.render(true)
-        })
-        html.find(".tidy-tools .inventory-list .control-collapse").click(ev => this._onClickCollapse(ev))
+            item.sheet.render(true);
+        });
+        html.find(".tidy-tools .inventory-list .control-collapse").click((ev) => this._onClickCollapse(ev));
         let configInputs = html.find("input[data-sheet-config]");
         for (let inp of configInputs) {
             inp.addEventListener("change", (ev) => {
                 let loc = inp.dataset.sheetConfig;
                 this.dollInventory.location[loc].label = ev.currentTarget.value;
                 this.persistConfig();
-            })
-
+            });
         }
-
     }
 
     _getHeaderButtons() {
         let buttons = super._getHeaderButtons();
-        if (!game.user.isGM && game.settings.get('tidy-doll-inventory', 'hideSheetButton')) {
-            buttons = buttons.filter(b => b.class != "configure-sheet")
-
+        if (!game.user.isGM && game.settings.get("tidy-doll-inventory", "hideSheetButton")) {
+            buttons = buttons.filter((b) => b.class != "configure-sheet");
         }
-        return buttons
-
+        return buttons;
     }
     colorPages(html) {
         let tabs = html.find(".sheet-body");
-        let backgroundGrad = `background :url('modules/tidy-doll-inventory/assets/parchment.png'),linear-gradient(0deg, ${this.dollInventory.thirdColor} 0%, ${this.dollInventory.fourthColor} 100%)`
+        let backgroundGrad = `background :url('modules/tidy-doll-inventory/assets/parchment.png'),linear-gradient(0deg, ${this.dollInventory.thirdColor} 0%, ${this.dollInventory.fourthColor} 100%)`;
         for (let t of tabs) {
             t.style = backgroundGrad;
         }
     }
     async initItemsFlags(html) {
-        let unflagedList = this.actor.items.filter(i => !i.getFlag("tidy-doll-inventory", "inventoryLocation"));
+        let unflagedList = this.actor.items.filter((i) => !i.getFlag("tidy-doll-inventory", "inventoryLocation"));
         let updateList = [];
-        unflagedList.forEach(async it => {
+        unflagedList.forEach(async (it) => {
             let locations = foundry.utils.duplicate(dollConfig.location);
             for (let loc in locations) {
                 //allowing all locations
@@ -273,13 +270,11 @@ export default class DollInventorySheet extends Tidy5eSheet {
             updateList.push({
                 _id: it._id,
                 "flags.tidy-doll-inventory.inventoryLocations": locations,
-                "system.equipped": false
-            })
-
+                "system.equipped": false,
+            });
         });
-        await this.actor.updateEmbeddedDocuments("Item", updateList)
+        await this.actor.updateEmbeddedDocuments("Item", updateList);
         await this.actor.setFlag("tidy-doll-inventory", "itemsInit", true);
-
     }
     async initDollInventoryBags() {
         let dollBags = [];
@@ -295,244 +290,226 @@ export default class DollInventorySheet extends Tidy5eSheet {
                     containerOptions: {
                         none: "none",
                         bag: "is bag",
-                        pouch: "is coin pouch"
+                        pouch: "is coin pouch",
                     },
                     currency: {
                         pp: 0,
                         gp: 0,
                         ep: 0,
                         sp: 0,
-                        cp: 0
+                        cp: 0,
                     },
                     computedWeight: 0,
                     innerItems: new Array(bag.system.capacity.value),
                     available: false,
-                }
-                await bag.setFlag("tidy-doll-inventory", "bagSlots", flag)
-            }
-            else {
+                };
+                await bag.setFlag("tidy-doll-inventory", "bagSlots", flag);
+            } else {
                 flag = await bag.getFlag("tidy-doll-inventory", "bagSlots");
-
             }
             for (let i = 0; i < bag.system.capacity.value; i++) {
                 flag.innerItems[i] = flag.innerItems[i];
                 if (i == bag.system.capacity.value - 1) {
-                    flag.innerItems.splice(i + 1, flag.innerItems.length + 1 - bag.system.capacity.value)
+                    flag.innerItems.splice(i + 1, flag.innerItems.length + 1 - bag.system.capacity.value);
                 }
             }
             for (let i = 0; i < flag.innerItems.length; i++) {
-                if (flag.innerItems[i] && !await this.actor.items.get(flag.innerItems[i]._id)) {
-                    flag.innerItems[i] = null
+                if (flag.innerItems[i] && !(await this.actor.items.get(flag.innerItems[i]._id))) {
+                    flag.innerItems[i] = null;
                 }
             }
 
-
-            await bag.setFlag("tidy-doll-inventory", "bagSlots", flag)
-            if (bag.flags["tidy-doll-inventory"]?.bagSlots?.available && bag.flags["tidy-doll-inventory"]?.bagSlots?.containerType == "bag") {
-                dollBags.push(bag)
+            await bag.setFlag("tidy-doll-inventory", "bagSlots", flag);
+            if (
+                bag.flags["tidy-doll-inventory"]?.bagSlots?.available &&
+                bag.flags["tidy-doll-inventory"]?.bagSlots?.containerType == "bag"
+            ) {
+                dollBags.push(bag);
             }
-
         }
         if (dollBags.length < 1) {
-            await this.createDefautBag()
+            await this.createDefautBag();
         }
         return dollBags;
-    };
+    }
     async createDefautBag() {
-        ui.notifications.notify("creating default bag")
-        let defaultsSlots = game.settings.get('tidy-doll-inventory', 'defaultBagSlotsNumers');
+        ui.notifications.notify("creating default bag");
+        let defaultsSlots = game.settings.get("tidy-doll-inventory", "defaultBagSlotsNumers");
         let bag = {
             name: this.actor.name + " inventory",
             type: "backpack",
             system: {
                 "capacity.value": defaultsSlots,
-                "equipped": true
+                equipped: true,
             },
             "flags.tidy-doll-inventory.bagSlots": {
-                "displayComputedEncumbrance": true,
-                "weightRatio": 1,
-                "currencyWeightRatio": 1,
-                "containerType": "bag",
-                "containerOptions": {
-                    "none": "none",
-                    "bag": "is bag",
-                    "pouch": "is coin pouch"
+                displayComputedEncumbrance: true,
+                weightRatio: 1,
+                currencyWeightRatio: 1,
+                containerType: "bag",
+                containerOptions: {
+                    none: "none",
+                    bag: "is bag",
+                    pouch: "is coin pouch",
                 },
                 innerItems: new Array(defaultsSlots),
-                "currency": {
-                    "pp": 0,
-                    "gp": 0,
-                    "ep": 0,
-                    "sp": 0,
-                    "cp": 0
+                currency: {
+                    pp: 0,
+                    gp: 0,
+                    ep: 0,
+                    sp: 0,
+                    cp: 0,
                 },
-                "computedWeight": 0,
+                computedWeight: 0,
 
-                "available": true
-            }
-        }
-        return await this.actor.createEmbeddedDocuments("Item", [bag])
-
+                available: true,
+            },
+        };
+        return await this.actor.createEmbeddedDocuments("Item", [bag]);
     }
     async _onDragStart(event) {
         if (event.currentTarget.classList.contains("location-item")) {
-            this.element.find('.clear-slot')[0].classList.add('visible');
+            this.element.find(".clear-slot")[0].classList.add("visible");
         }
         if (event.currentTarget.classList.contains("bag-item")) {
-
             let bagEl = event.currentTarget.closest("li.bag");
             let clearTarget = bagEl.querySelector(".clear-bag-slot");
-            clearTarget.classList.toggle("visible")
+            clearTarget.classList.toggle("visible");
         }
-        super._onDragStart(event)
+        super._onDragStart(event);
     }
 
-
     async _onDrop(event) {
-
         const data = TextEditor.getDragEventData(event);
         let dropItem = await Item.implementation.fromDropData(data);
 
-        if (this.element.find('.clear-slot.visible')[0]) {
-            this.element.find('.clear-slot')[0].classList.remove('visible');
-
+        if (this.element.find(".clear-slot.visible")[0]) {
+            this.element.find(".clear-slot")[0].classList.remove("visible");
         }
-
 
         if (event.currentTarget?.classList.contains("doll-location")) {
             if (event.currentTarget.dataset.location == "bag" || event.currentTarget.dataset.location == "coinPouch") {
                 if (dropItem.type != "backpack") {
                     ui.notifications.warn("only backpacks can be dropped here");
-                    return
+                    return;
                 }
-                if (event.currentTarget.dataset.location == "coinPuch" && dropItem.flags['tidy-doll-inventory']?.bagSlots?.containerType != "pouch") {
+                if (
+                    event.currentTarget.dataset.location == "coinPuch" &&
+                    dropItem.flags["tidy-doll-inventory"]?.bagSlots?.containerType != "pouch"
+                ) {
                     dropItem.sheet.render(true);
                     ui.notifications.warn("please configure your coin pouch");
-                    return
+                    return;
                 }
-                if (event.currentTarget.dataset.location == "bag" && dropItem.flags['tidy-doll-inventory']?.bagSlots?.containerType != "bag") {
+                if (
+                    event.currentTarget.dataset.location == "bag" &&
+                    dropItem.flags["tidy-doll-inventory"]?.bagSlots?.containerType != "bag"
+                ) {
                     dropItem.sheet.render(true);
                     ui.notifications.warn("please configure your backpack");
-                    return
+                    return;
                 }
-
             }
             return this._onDropDollLocation(event, data);
-
-        }
-        else if (event.currentTarget?.classList.contains("bagSlot")) {
-            return this._onDropBagSlot(event, data)
-        }
-
-        else if (event.currentTarget?.classList.contains("clear-slot")) {
-            this.clearInventoryLocation(dropItem)
-        }
-        else if (event.currentTarget?.classList.contains("clear-bag-slot")) {
+        } else if (event.currentTarget?.classList.contains("bagSlot")) {
+            return this._onDropBagSlot(event, data);
+        } else if (event.currentTarget?.classList.contains("clear-slot")) {
+            this.clearInventoryLocation(dropItem);
+        } else if (event.currentTarget?.classList.contains("clear-bag-slot")) {
             this.clearBagSlot(dropItem);
-        }
-
-        else {
+        } else {
             return super._onDrop(event);
         }
-
-
-
-
-
     }
 
     async _onDropBagSlot(ev, data) {
         let dropItem = await Item.implementation.fromDropData(data);
-        let targetBag = await this.actor.items.get(ev.currentTarget.closest("li.item.bag").dataset.itemId)
+        let targetBag = await this.actor.items.get(ev.currentTarget.closest("li.item.bag").dataset.itemId);
         let index = ev.currentTarget.dataset.slotIndex;
 
-        if (dropItem.flags["tidy-doll-inventory"]?.bagContainer) { await this.clearBagSlot(dropItem) }
+        if (dropItem.flags["tidy-doll-inventory"]?.bagContainer) {
+            await this.clearBagSlot(dropItem);
+        }
         //flagging dropped item with the bag id
 
         let bagFlag = targetBag.flags["tidy-doll-inventory"].bagSlots;
-        let duplicated = bagFlag.innerItems.find(it => it?._id == dropItem.id)
+        let duplicated = bagFlag.innerItems.find((it) => it?._id == dropItem.id);
         if (duplicated) {
-            bagFlag.innerItems[bagFlag.innerItems.indexOf(duplicated)] = null
-
+            bagFlag.innerItems[bagFlag.innerItems.indexOf(duplicated)] = null;
         }
-        bagFlag.innerItems[index] = foundry.utils.duplicate(dropItem);;
-        await targetBag.setFlag("tidy-doll-inventory", "bagSlots", bagFlag)
+        bagFlag.innerItems[index] = foundry.utils.duplicate(dropItem);
+        await targetBag.setFlag("tidy-doll-inventory", "bagSlots", bagFlag);
 
         await dropItem.update({
             "flags.tidy-doll-inventory.bagContainer": {
                 bagId: targetBag.id,
-                bagIndex: index
+                bagIndex: index,
             },
-            "system.equipped": false
+            "system.equipped": false,
         });
-        if (dropItem.flags["tidy-doll-inventory"].equippedSlot) { this.clearInventoryLocation(dropItem) }
-
-    };
+        if (dropItem.flags["tidy-doll-inventory"].equippedSlot) {
+            this.clearInventoryLocation(dropItem);
+        }
+    }
     async changeFilter(ev) {
         let targetFilter = ev.currentTarget.dataset.filter;
         this.dollInventory.itemListFilters[targetFilter].value = ev.currentTarget.checked ? true : false;
         this.persistConfig();
-
     }
     async displayFav(ev) {
         this.dollInventory.displayFavorites = ev.currentTarget.checked ? true : false;
-        this.persistConfig()
+        this.persistConfig();
     }
     async _onReadyItem(ev) {
-        let readys = ["ready1", "ready2", "ready3", "ready4"]
+        let readys = ["ready1", "ready2", "ready3", "ready4"];
         let nextEmptyReady = "";
-        let itemId = ev.currentTarget.closest('li.item').dataset.itemId
-        let item = await this.actor.items.get(itemId)
+        let itemId = ev.currentTarget.closest("li.item").dataset.itemId;
+        let item = await this.actor.items.get(itemId);
         for (let i = 0; i < readys.length; i++) {
             if (this.dollInventory.location[readys[i]].item == null) {
                 nextEmptyReady = readys[i];
-                break
-
+                break;
             }
-
         }
-        if (nextEmptyReady == "") { return ui.notifications.warn("no more empty ready slot") }
-        else { return this.equipSlot(item, nextEmptyReady) }
+        if (nextEmptyReady == "") {
+            return ui.notifications.warn("no more empty ready slot");
+        } else {
+            return this.equipSlot(item, nextEmptyReady);
+        }
     }
     async _onDropDollLocation(event, data) {
         let dropItem = await Item.implementation.fromDropData(data);
-        let availableLocations = await dropItem.getFlag("tidy-doll-inventory", "inventoryLocations")
+        let availableLocations = await dropItem.getFlag("tidy-doll-inventory", "inventoryLocations");
         let locationID = event.currentTarget.dataset.location;
-
-
 
         // equip backpack in bags
         if (!dollConfig.dropableTypes.includes(dropItem.type)) {
             if (dropItem.type == "backpack" && (locationID == "bag" || locationID == "coinPouch")) {
-                return this.equipSlot(dropItem, locationID)
-            }
-            else {
-                return ui.notifications.warn("this type of item can't be dropped in inventory doll")
+                return this.equipSlot(dropItem, locationID);
+            } else {
+                return ui.notifications.warn("this type of item can't be dropped in inventory doll");
             }
         }
         // if location not allowed by item's flags
         if (!availableLocations) {
-            dropItem.sheet.render(true)
+            dropItem.sheet.render(true);
             return ui.notifications.warn("This item hasn't been configure for the tidy doll inventory yet");
         }
-        // if location allowed 
+        // if location allowed
         if (availableLocations[locationID].available) {
-
             // if item is two-handed
             if (dropItem.system.properties?.two && (locationID === "mainHand" || locationID === "offHand")) {
                 return this.equipBothHands(dropItem);
             }
             if (locationID == "stowMain" || locationID == "stowOff") {
-                return (ui.notifications.warn("You must equip in hands before stowing"))
+                return ui.notifications.warn("You must equip in hands before stowing");
             }
-            return this.equipSlot(dropItem, locationID)
-
+            return this.equipSlot(dropItem, locationID);
         }
         // everything else= dropping not allowed
         else {
-            return ui.notifications.warn("This item can't be set in this inventory location")
+            return ui.notifications.warn("This item can't be set in this inventory location");
         }
-
     }
 
     async editBackgroundImage(ev) {
@@ -543,14 +520,13 @@ export default class DollInventorySheet extends Tidy5eSheet {
         const fp = new FilePicker({
             type: "image",
             current: current,
-            callback: async path => {
+            callback: async (path) => {
                 ev.currentTarget.src = path;
                 foundry.utils.setProperty(this, attr, path);
                 this.persistConfig();
-
             },
             top: this.position.top + 40,
-            left: this.position.left + 10
+            left: this.position.left + 10,
         });
         return fp.browse();
     }
@@ -558,10 +534,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
         let attr = ev.currentTarget.dataset.attr;
         let val = ev.currentTarget.checked;
         foundry.utils.setProperty(this, attr, val);
-        this.persistConfig()
-
-
-
+        this.persistConfig();
     }
     async changeColor(ev) {
         let attr = ev.currentTarget.dataset.color;
@@ -574,37 +547,34 @@ export default class DollInventorySheet extends Tidy5eSheet {
 
     async persistConfig() {
         await this.actor.setFlag("tidy-doll-inventory", "sheetConfig", this.dollInventory);
-
     }
     _onClickCollapse(ev) {
-        let inventory = ev.currentTarget.closest('.inventory-list');
-        let itemList = inventory.querySelector('ul.item-list');
+        let inventory = ev.currentTarget.closest(".inventory-list");
+        let itemList = inventory.querySelector("ul.item-list");
         itemList.classList.toggle("collapsed");
-        ev.currentTarget.classList.toggle("collapsed")
+        ev.currentTarget.classList.toggle("collapsed");
     }
     async displayFullInventory(ev) {
-
         let inventoryElement = this.form.querySelector(".tidy-tools");
         inventoryElement.classList.toggle("visible");
-        ev.currentTarget.classList.toggle('visible')
+        ev.currentTarget.classList.toggle("visible");
         this.dollInventory.displayInventory = inventoryElement.classList.contains("visible");
-        this.persistConfig()
+        this.persistConfig();
     }
 
     colorTabs(ev) {
-        let tabs = this.form.querySelectorAll("nav.tabs a.item")
+        let tabs = this.form.querySelectorAll("nav.tabs a.item");
 
         if (!ev) {
             for (let tab of tabs) {
-                if (tab.classList.contains('active')) {
+                if (tab.classList.contains("active")) {
                     tab.style.backgroundColor = this.dollInventory.primaryColor;
                 } else {
                     tab.style.backgroundColor = this.dollInventory.secondaryColor;
-
                 }
             }
-            this.form.querySelector(".left-pane").style.borderColor = this.dollInventory.primaryColor
-            this.form.querySelector(".center-pane").style.borderColor = this.dollInventory.primaryColor
+            this.form.querySelector(".left-pane").style.borderColor = this.dollInventory.primaryColor;
+            this.form.querySelector(".center-pane").style.borderColor = this.dollInventory.primaryColor;
         }
         if (ev) {
             for (let tab of tabs) {
@@ -612,11 +582,9 @@ export default class DollInventorySheet extends Tidy5eSheet {
             }
             ev.currentTarget.style.backgroundColor = this.dollInventory.primaryColor;
         }
-
     }
     clearActualDragedItemSlot() {
         this.dragedItem = null;
-
     }
     async clearBagSlot(item) {
         let bag = await this.actor.items.get(item.flags["tidy-doll-inventory"].bagContainer.bagId);
@@ -624,42 +592,35 @@ export default class DollInventorySheet extends Tidy5eSheet {
         let bagSlots = bag.flags["tidy-doll-inventory"].bagSlots;
         bagSlots.innerItems[index] = null;
 
-
         await item.unsetFlag("tidy-doll-inventory", "bagContainer");
         await bag.setFlag("tidy-doll-inventory", "bagSlots", bagSlots);
     }
     async equipSlot(item, slot) {
         if (this.dollInventory.location[slot].item) {
-            this.clearInventoryLocation(this.dollInventory.location[slot].item)
-
+            this.clearInventoryLocation(this.dollInventory.location[slot].item);
         }
         if (item.flags["tidy-doll-inventory"]?.bagContainer) {
-            this.clearBagSlot(item)
+            this.clearBagSlot(item);
         }
         await item.update({
             "system.equipped": true,
-            "flags.tidy-doll-inventory.equippedSlot": slot
+            "flags.tidy-doll-inventory.equippedSlot": slot,
         });
-
-
     }
     async equipBothHands(item) {
         if (this.dollInventory.location.mainHand.item) {
-            this.clearInventoryLocation(this.dollInventory.location.mainHand.item)
+            this.clearInventoryLocation(this.dollInventory.location.mainHand.item);
         }
         await item.update({
             "system.equipped": true,
-            "flags.tidy-doll-inventory.equippedSlot": "mainHand"
+            "flags.tidy-doll-inventory.equippedSlot": "mainHand",
         });
-
     }
     async equipBothStow(item) {
-
         await item.update({
             "system.equipped": true,
-            "flags.tidy-doll-inventory.equippedSlot": "offMain"
-        })
-
+            "flags.tidy-doll-inventory.equippedSlot": "offMain",
+        });
     }
     async clearInventoryLocation(item) {
         let flag = item.flags["tidy-doll-inventory"];
@@ -667,64 +628,63 @@ export default class DollInventorySheet extends Tidy5eSheet {
 
         await item.update({
             "system.equipped": false,
-            "flags.tidy-doll-inventory": flag
-        })
+            "flags.tidy-doll-inventory": flag,
+        });
     }
     disableOffHand() {
-
         let offEl = this.element.find("[data-location='offHand']")[0];
-        offEl.classList.add("disabled")
+        offEl.classList.add("disabled");
         let stowOffEl = this.element.find("[data-location='stowOff']")[0];
         stowOffEl.classList.add("disabled");
         let switchOff = this.element.find("[data-hand='off']")[0];
         switchOff.classList.add("disabled");
 
         let mainEl = this.element.find("[data-location='mainHand']")[0];
-        mainEl.classList.add("twoHands")
+        mainEl.classList.add("twoHands");
         let stowmainEl = this.element.find("[data-location='stowMain']")[0];
         stowmainEl.classList.add("twoHands");
         let switchmain = this.element.find("[data-hand='main']")[0];
         switchmain.classList.add("twoHands");
 
-        this.clearInventoryLocation(this.dollInventory.location.offHand.item)
-
+        this.clearInventoryLocation(this.dollInventory.location.offHand.item);
     }
     async _onSwitchStow(ev) {
         let loc = undefined;
         let hand = ev.currentTarget.dataset.hand;
         if (hand == "off") {
             if (this.dollInventory.location.offHand.item) {
-                loc = "offHand"
+                loc = "offHand";
             }
             if (this.dollInventory.location.stowOff.item) {
-                loc = "stowOff"
+                loc = "stowOff";
             }
         }
         if (hand == "main") {
             if (this.dollInventory.location.mainHand.item) {
-                loc = "mainHand"
+                loc = "mainHand";
             }
             if (this.dollInventory.location.stowMain.item) {
-                loc = "stowMain"
+                loc = "stowMain";
             }
         }
-        if (!loc) { return }
+        if (!loc) {
+            return;
+        }
         let source, item;
-        item = this.dollInventory.location[loc].item
+        item = this.dollInventory.location[loc].item;
         source = item.flags["tidy-doll-inventory"].equippedSlot;
 
-        this.switchStow(item, source)
-
+        this.switchStow(item, source);
     }
 
     switchStow(item, source) {
         let dest = "";
         switch (source) {
             case "mainHand":
-                dest = "stowMain"
+                dest = "stowMain";
                 break;
             case "stowMain":
-                dest = "mainHand"
+                dest = "mainHand";
                 break;
             case "offHand":
                 dest = "stowOff";
@@ -732,11 +692,7 @@ export default class DollInventorySheet extends Tidy5eSheet {
             case "stowOff":
                 dest = "offHand";
                 break;
-
         }
         this.equipSlot(item, dest);
-
     }
-
 }
-
