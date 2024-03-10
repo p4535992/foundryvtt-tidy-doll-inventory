@@ -1,9 +1,10 @@
-import { Tidy5eSheet } from "../../../tidy5e-sheet/scripts/tidy5e-sheet.js";
+// import { Tidy5eSheet } from "../../../tidy5e-sheet/scripts/tidy5e-sheet.js";
 import { dollConfig } from "../config.js";
 
-export default class DollInventorySheet extends Tidy5eSheet {
+export default class DollInventorySheet {
+    // TODO extends Tidy5eSheet {
     constructor(...args) {
-        super(...args);
+        // super(...args);
         this.initInventory();
     }
     get template() {

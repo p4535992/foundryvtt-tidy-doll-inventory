@@ -71,7 +71,7 @@ Hooks.once("init", async function () {
     });
     preloadDollInventoryTemplates();
 
-    //handelbar helpers
+    // handelbar helpers
 
     Handlebars.registerHelper("ifequal", function (a, b, options) {
         if (a == b) {
@@ -81,7 +81,7 @@ Hooks.once("init", async function () {
     });
 
     Handlebars.registerHelper("ifnotequal", function (a, b, options) {
-        if (a != b) {
+        if (a !== b) {
             return options.fn(this);
         }
         return options.inverse(this);
@@ -102,14 +102,14 @@ Hooks.once("ready", async function () {});
 Hooks.on("renderItemSheet", async function (sheet, html, options) {
     // if items can be droped on dollInventory
     if (dollConfig.dropableTypes.includes(sheet.item.type)) {
-        //getting flags on items for dollInventory
+        // getting flags on items for dollInventory
         let inventoryLocations = sheet.item.getFlag("tidy-doll-inventory", "inventoryLocations");
 
-        //creating dollInventory flag object if none
+        // creating dollInventory flag object if none
         if (!inventoryLocations) {
             let locations = dollConfig.location;
             for (let loc in locations) {
-                //allowing all locations
+                // allowing all locations
                 locations[loc].available = true;
             }
             await sheet.item.setFlag("tidy-doll-inventory", "inventoryLocations", locations);
@@ -137,11 +137,11 @@ Hooks.on("renderItemSheet", async function (sheet, html, options) {
         }
     }
     // creating flags on backpacks
-    if (sheet.item.type == "backpack") {
+    if (sheet.item.type === "backpack") {
         // getting dollInventory Bags flags
         let bagFlags = sheet.item.getFlag("tidy-doll-inventory", "bagSlots");
 
-        //if no flag creating it
+        // if no flag creating it
         if (!bagFlags) {
             let flag = {
                 weightRatio: 1,
@@ -166,7 +166,7 @@ Hooks.on("renderItemSheet", async function (sheet, html, options) {
             await sheet.item.setFlag("tidy-doll-inventory", "bagSlots", flag);
         }
 
-        //creating form for adding inventory slots
+        // creating form for adding inventory slots
         let htmlElement = await renderTemplate("modules/tidy-doll-inventory/templates/bagSetting.hbs", sheet.item);
         let targetEl = html.find(".tab.details");
         targetEl.append(htmlElement);
@@ -178,7 +178,7 @@ Hooks.on("item-piles-dropItem", async function (sourceActor, tokenSource, itemLi
 
     let totalItemList = [];
     let adding = false;
-    //deleting embedded bags item if exist
+    // deleting embedded bags item if exist
     for (let item of itemList) {
         let flag = item.flags["tidy-doll-inventory"]?.bagSlots;
         if (flag?.containerType == "bag") {
