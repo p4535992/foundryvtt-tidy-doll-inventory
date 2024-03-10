@@ -2,14 +2,8 @@
   "id": "tidy-doll-inventory",
   "title": "Tidy doll-inventory",
   "description": "A module that allow drag and drop inventory management on a 'doll' ; in a way many rpg video games do. It requires tidy5e-sheet and item-pile modules",
-  "version": "#{VERSION}#",
+  "version": "11.0.0",
   "library": "false",
-  "manifestPlusVersion": "1.2.0",
-  "compatibility": {
-    "minimum": 10,
-    "verified": 10.291,
-    "maximum": 10
-  },
   "authors": [
     {
       "name": "Rwanoux",
@@ -17,16 +11,30 @@
       "discord": "rwanoux#3031"
     }
   ],
+  "media": [
+    {
+      "type": "icon",
+      "url": "https://avatars.githubusercontent.com/u/18176317?v=4"
+    }
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "languages/en.json"
+    }
+  ],
+  "esmodules": [
+    "module.js"
+  ],
+  "styles": [
+    "styles/doll-inventory.css"
+  ],
   "relationships": {
     "systems": [
       {
         "id": "dnd5e",
-        "type": "system",
-        "manifest": "https://raw.githubusercontent.com/foundryvtt/dnd5e/v10-dev/system.json",
-        "compatibility": {
-          "minimum": "2.0.0-alpha1",
-          "verified": "2.1.5"
-        }
+        "type": "system"
       }
     ],
     "requires": [
@@ -48,28 +56,11 @@
       }
     ]
   },
-  "esmodules": [
-    "scripts/module.js"
-  ],
-  "styles": [
-    "css/doll-inventory.css"
-  ],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "languages/en.json"
-    }
-  ],
+
   "url": "#{URL}#",
   "manifest": "#{MANIFEST}#",
   "download": "#{DOWNLOAD}#",
   "license": "LICENSE",
   "readme": "README.md",
-  "media": [
-    {
-      "type": "icon",
-      "url": "https://avatars.githubusercontent.com/u/18176317?v=4"
-    }
-  ]
+
 }
