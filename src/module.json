@@ -10,57 +10,80 @@
       "url": "https://github.com/rwanoux",
       "discord": "rwanoux#3031"
     }
-  ],
-  "media": [
-    {
-      "type": "icon",
-      "url": "https://avatars.githubusercontent.com/u/18176317?v=4"
-    }
-  ],
-  "languages": [
-    {
-      "lang": "en",
-      "name": "English",
-      "path": "languages/en.json"
-    }
-  ],
-  "esmodules": [
-    "module.js"
-  ],
-  "styles": [
-    "styles/doll-inventory.css"
-  ],
-  "relationships": {
-    "systems": [
+  ],  
+    "type": "module",
+    "socket": true,
+    "includes": [
+        "./assets/**",
+        "./lang/**",
+        "./languages/**",
+        "./scripts/**",
+        "./styles/**",
+        "./templates/**",
+        "./module.json",
+        "./README.md",
+        "./icons/**",
+        "./packs/**"
+    ],
+    "media": [
       {
-        "id": "dnd5e",
-        "type": "system"
+        "type": "icon",
+        "url": "https://avatars.githubusercontent.com/u/18176317?v=4"
       }
     ],
-    "requires": [
-      {
-        "id": "item-piles",
-        "compatibility": {
-          "minimum": "2.6.13",
-          "verified": "2.6.14"
-        },
-        "type": "module"
-      },
-      {
-        "id": "tidy5e-sheet",
-        "compatibility": {
-          "minimum": "0.8.27",
-          "verified": "0.8.41"
-        },
-        "type": "module"
-      }
-    ]
-  },
-
-  "url": "#{URL}#",
-  "manifest": "#{MANIFEST}#",
-  "download": "#{DOWNLOAD}#",
-  "license": "LICENSE",
-  "readme": "README.md",
-
-}
+    "languages": [
+        {
+            "lang": "en",
+            "name": "English",
+            "path": "languages/en.json"
+        }
+    ],
+    "packs": [],
+    "scripts": [],
+    "esmodules": [
+      "module.js"
+    ],
+    "styles": [
+      "styles/doll-inventory.css"
+    ],
+    "compatibility": {
+        "minimum": 11,
+        "verified": 11,
+        "maximum": 11
+    },
+    "manifestPlusVersion": "1.2.1",
+    "url": "https://github.com/p4535992/foundryvtt-lazymoney-dnd5e",
+    "manifest": "https://github.com/p4535992/foundryvtt-lazymoney-dnd5e/releases/download/1.3.3/module.json",
+    "download": "https://github.com/p4535992/foundryvtt-lazymoney-dnd5e/releases/download/1.3.3/module.zip",
+    "readme": "https://github.com/p4535992/foundryvtt-lazymoney-dnd5e/blob/master/README.md",
+    "changelog": "https://github.com/p4535992/foundryvtt-lazymoney-dnd5e/blob/master/CHANGELOG.md",
+    "bugs": "https://github.com/p4535992/foundryvtt-lazymoney-dnd5e/issues",
+    "allowBugReporter": true,
+    "relationships": {
+        "systems": [
+          {
+            "id": "dnd5e",
+            "type": "system"
+          }
+        ],
+        "requires": [
+          {
+            "id": "item-piles",
+            "compatibility": {
+              "minimum": "2.6.13",
+              "verified": "2.6.14"
+            },
+            "type": "module"
+          },
+          {
+            "id": "tidy5e-sheet",
+            "compatibility": {
+              "minimum": "0.8.27",
+              "verified": "0.8.41"
+            },
+            "type": "module"
+          }
+        ],
+        "conflicts": []
+    }
+  }
